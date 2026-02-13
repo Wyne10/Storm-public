@@ -18,6 +18,7 @@ dependencies {
     compileOnly(libs.commandApi)
     compileOnly(libs.connectionSource)
 
+    implementation(project(":api"))
     implementation(libs.guice)
     implementation(libs.adventureMini)
     implementation(libs.adventureBukkit)
