@@ -19,7 +19,9 @@ import me.wyne.wutils.i18n.language.validation.EmptyValidator
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bigcraft.storm.Storm.Companion.EMPTY_CONFIGURATION
 import org.bigcraft.storm.Storm.Companion.logger
+import org.bigcraft.storm.module.ApiModule
 import org.bigcraft.storm.module.CommandModule
+import org.bigcraft.storm.module.EffectModule
 import org.bigcraft.storm.module.PlaceholderModule
 import org.bigcraft.storm.module.PluginModule
 
@@ -62,6 +64,8 @@ object InitializeInjector : PluginStep<Storm> {
             Storm.instance.injector = Guice.createInjector(
                 Stage.PRODUCTION,
                 PluginModule(plugin),
+                EffectModule,
+                ApiModule,
                 PlaceholderModule,
                 CommandModule
             )

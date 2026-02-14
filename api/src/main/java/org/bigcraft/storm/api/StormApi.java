@@ -7,6 +7,7 @@ public final class StormApi {
     private static JavaPlugin plugin;
     private static Logger logger;
     private static StormEffectRegistry effectRegistry;
+    private static StormEffectManager effectManager;
 
     public static JavaPlugin getPlugin() {
         return plugin;
@@ -30,5 +31,13 @@ public final class StormApi {
 
     public static void setEffectRegistry(StormEffectRegistry effectRegistry) {
         StormApi.effectRegistry = effectRegistry;
+    }
+
+    public static StormEffectManager getEffectManager() {
+        return effectManager;
+    }
+
+    public static void setEffectManager(StormEffectManager effectManager) {
+        StormApi.effectManager = effectManager;
     }
 }

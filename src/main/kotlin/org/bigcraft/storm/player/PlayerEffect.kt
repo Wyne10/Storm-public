@@ -12,12 +12,17 @@ data class PlayerEffect(
     val id: Long = 0,
     @DatabaseField(uniqueCombo = true, canBeNull = false)
     val uuid: UUID = UUID.randomUUID(),
-    @DatabaseField(columnName = "effect_key", uniqueCombo = true, canBeNull = false)
-    val effectKey: String,
-    @DatabaseField(columnName = "expires_after_ticks", canBeNull = false)
-    var expiresAfterTicks: Long = 0,
-    @DatabaseField(columnName = "obtained_at_ticks", canBeNull = false)
-    val obtainedAtTicks: Long = 0,
+    @DatabaseField(columnName = "effect_instance_key", uniqueCombo = true, canBeNull = false)
+    val effectInstanceKey: String,
+    @DatabaseField(columnName = "remaining_ms", canBeNull = false)
+    var remainingMillis: Long = 0,
     @DatabaseField(dataType = DataType.DATE, canBeNull = false)
     val timestamp: Date = Date()
-)
+) {
+    constructor(uuid: UUID, effectInstanceKey: String, remainingMillis: Long) :
+            this(uuid = uuid, effectInstanceKey = effectInstanceKey, remainingMillis = remainingMillis, timestamp = Date())
+
+    companion object {
+        const val EFFECT_INSTANCE_FIELD = "effect_instance_key"
+    }
+}
