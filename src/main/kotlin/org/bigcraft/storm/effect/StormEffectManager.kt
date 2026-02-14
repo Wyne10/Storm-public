@@ -26,6 +26,10 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
 
     private val eventRegistry = EventRegistry(plugin)
 
+    init {
+        plugin.bind(this)
+    }
+
     override fun register(effect: StormEffect) {
         registeredEffects[effect.key] = effect.javaClass
         loadedMap.values

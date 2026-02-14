@@ -25,6 +25,7 @@ class PlayerEffectManager @Inject constructor(
 
     init {
         Bukkit.getPluginManager().registerEvents(this, plugin)
+        plugin.bind(this)
     }
 
     override fun isAffected(player: Player?, effectInstanceKey: String): Boolean {
