@@ -43,16 +43,27 @@ class SqlPlayerEffectStorage @Inject constructor(
         effectDao = null
         if (connectionProvider.isActive) {
             effectDao = DaoManager.createDao(connectionProvider.connectionPool.source, PlayerEffect::class.java)
-            TableUtils.createTableIfNotExists(connectionProvider.connectionPool.source, PlayerEffect::class.java)
+            if (!effectDao!!.isTableExists) {
+                TableUtils.createTable(connectionProvider.connectionPool.source, PlayerEffect::class.java)
+            }
             return
         }
         Storm.logger.error("Couldn't connect to effect database, subsequent requests will fail")
     }
 
-    // TODO Prevent exception on duplicate entry
     override fun setEffect(player: UUID, effectInstanceKey: String, durationMillis: Long) {
         executor.execute {
-            effectDao?.createIfNotExists(PlayerEffect(player, effectInstanceKey, durationMillis))
+            val playerEffect = effectDao?.queryBuilder()?.where()
+                ?.eq("uuid", player)
+                ?.and()
+                ?.eq(PlayerEffect.EFFECT_INSTANCE_FIELD, effectInstanceKey)
+                ?.queryForFirst()
+            if (playerEffect == null) {
+                effectDao?.create(PlayerEffect(player, effectInstanceKey, durationMillis))
+            } else {
+                playerEffect.remainingMillis = durationMillis
+                effectDao?.update(playerEffect)
+            }
         }
     }
 
