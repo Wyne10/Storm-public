@@ -7,8 +7,10 @@ import me.wyne.wutils.common.loadable.LoadableMeta
 import me.wyne.wutils.common.terminable.Terminable
 import org.bigcraft.storm.AbstractManager
 import org.bigcraft.storm.Storm
+import org.bigcraft.storm.api.StormApi
 import org.bigcraft.storm.api.StormEffect
 import org.bigcraft.storm.api.StormEffectRegistry
+import org.bigcraft.storm.effect.impl.HunterEffect
 import org.bukkit.configuration.ConfigurationSection
 import java.io.File
 
@@ -21,7 +23,7 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
     override val valueLoader = StormEffectInstance.Factory
     private val effectDirectory = File(plugin.dataFolder, "effect")
 
-    private val registeredEffects: MutableMap<String, Class<StormEffect>> = mutableMapOf()
+    private val registeredEffects: MutableMap<String, Class<out StormEffect>> = mutableMapOf()
     private val effects: MutableMap<String, StormEffect> = mutableMapOf()
 
     private val eventRegistry = EventRegistry(plugin)
@@ -30,42 +32,53 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
         plugin.bind(this)
     }
 
-    override fun register(effect: StormEffect) {
-        registeredEffects[effect.key] = effect.javaClass
+    override fun register(effect: Class<out StormEffect>, effectKey: String) {
+        registeredEffects[effectKey] = effect
+        Storm.logger.debug("Registered effect '{}'", effectKey)
         loadedMap.values
-            .filter { it.effectKey == effect.key }
+            .filter { it.effectKey == effectKey }
             .forEach {
                 runCatching {
-                    val newEffect = effect.javaClass
+                    Storm.logger.debug("Loading effect instance '{}'", it.key)
+                    val newEffect = effect
                         .getConstructor(ConfigurationSection::class.java).newInstance(it.configuration)
                     effects[it.key] = newEffect
                     eventRegistry.register(newEffect)
-                }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance {}", it.key, t) }
+                }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance '{}'", it.key, t) }
             }
     }
 
     override fun load(config: ConfigurationSection) {
+        if (loadedMap.isEmpty()) {
+            super.load(config)
+            loadFiles(effectDirectory)
+            return
+        }
         eventRegistry.clear()
         effects.clear()
-        super.load(config)
-        loadFiles(effectDirectory)
         loadedMap.values
             .forEach {
-                Storm.logger.debug("Loading effect instance {}", it.key)
+                Storm.logger.debug("Loading effect instance '{}'", it.key)
                 val effect = registeredEffects[it.effectKey]
                 if (effect == null)
-                    Storm.logger.error("No effect with a key {} is registered", it.effectKey).also { return@forEach }
+                    Storm.logger.error("No effect with a key '{}' is registered", it.effectKey).also { return@forEach }
                 runCatching {
                     val newEffect = effect
                         .getConstructor(ConfigurationSection::class.java).newInstance(it.configuration)
                     effects[it.key] = newEffect
                     eventRegistry.register(newEffect)
-                }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance {}", it.key, t) }
+                }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance '{}'", it.key, t) }
             }
     }
 
     override fun close() {
         eventRegistry.closeAndReportException()
+    }
+
+    companion object {
+        fun registerImplementations() {
+            StormApi.getEffectRegistry().register(HunterEffect::class.java, "hunter")
+        }
     }
 
 }

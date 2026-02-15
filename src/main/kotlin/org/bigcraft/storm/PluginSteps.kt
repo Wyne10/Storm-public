@@ -19,8 +19,10 @@ import me.wyne.wutils.i18n.language.validation.EmptyValidator
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import org.bigcraft.storm.Storm.Companion.EMPTY_CONFIGURATION
 import org.bigcraft.storm.Storm.Companion.logger
+import org.bigcraft.storm.effect.StormEffectManager
 import org.bigcraft.storm.module.ApiModule
 import org.bigcraft.storm.module.CommandModule
+import org.bigcraft.storm.module.ConnectionModule
 import org.bigcraft.storm.module.EffectModule
 import org.bigcraft.storm.module.PlaceholderModule
 import org.bigcraft.storm.module.PluginModule
@@ -66,6 +68,7 @@ object InitializeInjector : PluginStep<Storm> {
                 PluginModule(plugin),
                 EffectModule,
                 ApiModule,
+                ConnectionModule,
                 PlaceholderModule,
                 CommandModule
             )
@@ -97,6 +100,13 @@ object InitializeLoader : PluginStep<Storm> {
 object Load : PluginStep<Storm> {
     override fun run(plugin: Storm) {
         Loader.global.load(plugin)
+    }
+}
+
+@Step(priority = 8, scope = StepScope.ENABLE)
+object RegisterEffects : PluginStep<Storm> {
+    override fun run(plugin: Storm) {
+        StormEffectManager.registerImplementations()
     }
 }
 

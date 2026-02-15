@@ -10,33 +10,27 @@ import org.slf4j.Logger;
 
 public abstract class StormEffect implements Listener {
 
-    private final ConfigurationSection configuration;
+    private final ConfigurationSection config;
     private final String effectInstanceKey;
 
-    public StormEffect(ConfigurationSection configuration) {
-        this.configuration = configuration;
-        this.effectInstanceKey = configuration.getName();
+    public StormEffect(ConfigurationSection config) {
+        this.config = config;
+        this.effectInstanceKey = config.getName();
     }
-
-    public abstract @NotNull String getKey();
 
     protected JavaPlugin getPlugin() {
         return StormApi.getPlugin();
     }
 
-    protected @Nullable ConfigurationSection getConfiguration() {
-        return configuration;
+    protected @NotNull ConfigurationSection getConfig() {
+        return config;
     }
 
     protected Logger getLogger() {
         return StormApi.getLogger();
     }
 
-    protected void register() {
-        StormApi.getEffectRegistry().register(this);
-    }
-
-    protected boolean isAffected(Player player) {
+    protected boolean isAffected(@Nullable Player player) {
         return StormApi.getEffectManager().isAffected(player, effectInstanceKey);
     }
 

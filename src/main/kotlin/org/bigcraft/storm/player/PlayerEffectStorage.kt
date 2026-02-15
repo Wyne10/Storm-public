@@ -49,6 +49,7 @@ class SqlPlayerEffectStorage @Inject constructor(
         Storm.logger.error("Couldn't connect to effect database, subsequent requests will fail")
     }
 
+    // TODO Prevent exception on duplicate entry
     override fun setEffect(player: UUID, effectInstanceKey: String, durationMillis: Long) {
         executor.execute {
             effectDao?.createIfNotExists(PlayerEffect(player, effectInstanceKey, durationMillis))

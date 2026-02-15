@@ -38,7 +38,7 @@ class PlayerEffectManager @Inject constructor(
         if (player == null) return
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis)
         if (player.isOnline)
-            effectExpirationTable.put(player.uniqueId, effectInstanceKey, durationMillis)
+            effectExpirationTable.put(player.uniqueId, effectInstanceKey, System.currentTimeMillis() + durationMillis)
     }
 
     override fun clearEffect(player: OfflinePlayer?, effectInstanceKey: String) {

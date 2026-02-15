@@ -10,10 +10,10 @@ import java.util.UUID
 data class PlayerEffect(
     @DatabaseField(generatedId = true)
     val id: Long = 0,
-    @DatabaseField(uniqueCombo = true, canBeNull = false)
+    @DatabaseField(uniqueIndexName = UNIQUE_INDEX_NAME, canBeNull = false)
     val uuid: UUID = UUID.randomUUID(),
-    @DatabaseField(columnName = "effect_instance_key", uniqueCombo = true, canBeNull = false)
-    val effectInstanceKey: String,
+    @DatabaseField(columnName = EFFECT_INSTANCE_FIELD, uniqueIndexName = UNIQUE_INDEX_NAME, canBeNull = false)
+    val effectInstanceKey: String = "",
     @DatabaseField(columnName = "remaining_ms", canBeNull = false)
     var remainingMillis: Long = 0,
     @DatabaseField(dataType = DataType.DATE, canBeNull = false)
@@ -23,6 +23,7 @@ data class PlayerEffect(
             this(uuid = uuid, effectInstanceKey = effectInstanceKey, remainingMillis = remainingMillis, timestamp = Date())
 
     companion object {
+        private const val UNIQUE_INDEX_NAME = "idx_player_effect"
         const val EFFECT_INSTANCE_FIELD = "effect_instance_key"
     }
 }

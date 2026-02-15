@@ -11,7 +11,7 @@ data class StormEffectInstance(
     companion object Factory : GenericFactory<StormEffectInstance> {
         override fun create(key: String, config: ConfigurationSection): StormEffectInstance {
             val section = config.getConfigurationSection(key)!!
-            val effectKey = config.getString("effect")!!
+            val effectKey = section.getString("effect")!!
             return StormEffectInstance(key, effectKey, section)
         }
     }
