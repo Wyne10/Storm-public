@@ -2,14 +2,12 @@ package org.bigcraft.storm.command
 
 import dev.jorel.commandapi.CommandAPIBukkit
 import dev.jorel.commandapi.CommandAPICommand
-import dev.jorel.commandapi.IStringTooltip
 import dev.jorel.commandapi.StringTooltip
 import dev.jorel.commandapi.arguments.Argument
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandArguments
 import dev.jorel.commandapi.executors.CommandExecutor
-import me.wyne.wutils.common.kotlin.command.suggest
 import me.wyne.wutils.common.kotlin.command.tooltip
 import me.wyne.wutils.i18n.kotlin.placeholderComponent
 import me.wyne.wutils.i18n.kotlin.replace
@@ -50,11 +48,16 @@ fun durationArgument(nodeName: String) =
         StringTooltip.ofString("<duration>", "Like 30m, 1h, 1m30s, etc.")
     )
 
-fun getOfflinePlayer(args: CommandArguments, nodeName: String, sender: CommandSender): OfflinePlayer {
-    val targetName = args.getRaw(nodeName) ?: ""
-    val targetUuid = Bukkit.getPlayerUniqueId(targetName)
+fun CommandArguments.getOfflinePlayer(nodeName: String, sender: CommandSender): OfflinePlayer {
+    val playerName = getRaw(nodeName) ?: ""
+    val playerUuid = Bukkit.getPlayerUniqueId(playerName)
         ?: throw CommandAPIBukkit.failWithBaseComponents(
-            *sender.placeholderComponent("error-player-not-found", "name" replace targetName).bungee()
+            *sender.placeholderComponent("error-player-not-found", "name" replace playerName).bungee()
         )
-    return Bukkit.getOfflinePlayer(targetUuid)
+    val player = Bukkit.getOfflinePlayer(playerUuid)
+    if (!player.hasPlayedBefore())
+        throw CommandAPIBukkit.failWithBaseComponents(
+            *sender.placeholderComponent("error-player-not-found", "name" replace playerName).bungee()
+        )
+    return Bukkit.getOfflinePlayer(playerUuid)
 }

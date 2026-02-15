@@ -23,6 +23,7 @@ class StormCommand @Inject constructor(
             .withSubcommand(ReloadCommand(plugin)())
             .withSubcommand(ApplyCommand(effectManager, playerManager)())
             .withSubcommand(ClearCommand(effectManager, playerManager)())
+            .withSubcommand(PurchaseCommand(effectManager, playerManager)())
             .register(plugin)
     }
 

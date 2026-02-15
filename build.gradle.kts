@@ -17,6 +17,7 @@ dependencies {
     compileOnly(libs.placeholderApi)
     compileOnly(libs.commandApi)
     compileOnly(libs.connectionSource)
+    compileOnly(libs.infPoints)
 
     implementation(project(":api"))
     implementation(libs.guice)
@@ -82,20 +83,23 @@ bukkit {
     author = findProperty("author").toString()
     main = "org.bigcraft.storm.Storm"
     apiVersion = "1.16"
-    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource")
+    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints")
     permissions {
         register("effects.*") {
-            children = listOf("effects.reload", "effects.apply", "effects.clear")
+            children = listOf("effects.reload", "effects.apply", "effects.clear", "effects.purchase")
             default = BukkitPluginDescription.Permission.Default.OP
         }
         register("effects.reload") {
             description = "Allows to reload plugin"
         }
         register("effects.apply") {
-            description = "Allows to apply effects on player"
+            description = "Allows to apply effects on players"
         }
         register("effects.clear") {
-            description = "Allows to clear effects on player"
+            description = "Allows to clear effects on players"
+        }
+        register("effects.purchase") {
+            description = "Allows to purchase effects for players"
         }
     }
 }

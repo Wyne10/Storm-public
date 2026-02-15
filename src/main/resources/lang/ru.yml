@@ -5,6 +5,9 @@
 ## Error
 error-effect-not-found: "<red>Эффект '<key>' не существует!"
 error-player-not-found: "<red>Игрок '<name>' не существует!"
+error-currency-not-found: "<red>Валюта '<currency>' не существует!"
 
 ## Success
 success-plugin-reload: "<green>Плагин перезагружен!"
+success-effect-apply: "<green>Эффект применен."
+success-effect-clear: "<green>Эффект очищен."
