@@ -3,6 +3,8 @@
 ## Info
 
 ## Error
+error-effect-not-found: "<red>Эффект '<key>' не существует!"
+error-player-not-found: "<red>Игрок '<name>' не существует!"
 
 ## Success
 success-plugin-reload: "<green>Плагин перезагружен!"

@@ -1,7 +1,12 @@
 regenerate: true
-lang: 'en.yml'
+lang: 'ru.yml'
 usePlayerLanguage: true
 # LEGACY/ENHANCED_LEGACY/MINI_MESSAGE
 serializer: MINI_MESSAGE
 # OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL
 logLevel: INFO
+
+effects:
+  hunter:
+    effect: hunter
+    multiplier: 1.25

@@ -20,6 +20,7 @@ class Storm : CompositeJavaPlugin<Storm>() {
             InitializeConfig,
             InitializeLoader,
             Load,
+            RegisterEffects,
             Reload
         )
     }

@@ -18,6 +18,7 @@ dependencies {
     compileOnly(libs.commandApi)
     compileOnly(libs.connectionSource)
 
+    implementation(project(":api"))
     implementation(libs.guice)
     implementation(libs.adventureMini)
     implementation(libs.adventureBukkit)
@@ -81,14 +82,20 @@ bukkit {
     author = findProperty("author").toString()
     main = "org.bigcraft.storm.Storm"
     apiVersion = "1.16"
-    softDepend = listOf("PlaceholderAPI", "CommandAPI")
+    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource")
     permissions {
         register("effects.*") {
-            children = listOf("effects.reload")
+            children = listOf("effects.reload", "effects.apply", "effects.clear")
             default = BukkitPluginDescription.Permission.Default.OP
         }
         register("effects.reload") {
             description = "Allows to reload plugin"
+        }
+        register("effects.apply") {
+            description = "Allows to apply effects on player"
+        }
+        register("effects.clear") {
+            description = "Allows to clear effects on player"
         }
     }
 }
