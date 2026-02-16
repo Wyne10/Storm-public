@@ -10,13 +10,14 @@ import org.bigcraft.storm.Storm
 import org.bigcraft.storm.api.StormApi
 import org.bigcraft.storm.api.StormEffect
 import org.bigcraft.storm.api.StormEffectRegistry
+import org.bigcraft.storm.api.TickableStormEffect
 import org.bigcraft.storm.effect.impl.HunterEffect
 import org.bukkit.configuration.ConfigurationSection
 import java.io.File
 
 @Singleton
 @LoadableMeta(priority = 0)
-class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<StormEffectInstance>(),
+class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: StormEffectTicker) : AbstractManager<StormEffectInstance>(),
     StormEffectRegistry, Terminable {
 
     override val sectionKey = "effect"
@@ -46,7 +47,12 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
                     val newEffect = effect
                         .getConstructor(ConfigurationSection::class.java).newInstance(it.configuration)
                     effects[it.key] = newEffect
-                    eventRegistry.register(newEffect)
+                    if (newEffect is TickableStormEffect) {
+                        ticker.registerEffect(effectKey, newEffect.periodTicks)
+                        ticker.registerEffectInstance(it, newEffect)
+                    } else {
+                        eventRegistry.register(newEffect)
+                    }
                 }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance '{}'", it.key, t) }
             }
     }
@@ -59,6 +65,7 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
         }
         eventRegistry.clear()
         effects.clear()
+        ticker.clear()
         loadedMap.values
             .forEach {
                 Storm.logger.debug("Loading effect instance '{}'", it.key)
@@ -69,7 +76,12 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
                     val newEffect = effect
                         .getConstructor(ConfigurationSection::class.java).newInstance(it.configuration)
                     effects[it.key] = newEffect
-                    eventRegistry.register(newEffect)
+                    if (newEffect is TickableStormEffect) {
+                        ticker.registerEffect(it.effectKey, newEffect.periodTicks)
+                        ticker.registerEffectInstance(it, newEffect)
+                    } else {
+                        eventRegistry.register(newEffect)
+                    }
                 }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance '{}'", it.key, t) }
             }
     }
