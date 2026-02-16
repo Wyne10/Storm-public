@@ -6,7 +6,8 @@ serializer: MINI_MESSAGE
 # OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL
 logLevel: INFO
 
-effects:
+effect:
   hunter:
+    name: "Бустер опыта"
     effect: hunter
     multiplier: 1.25

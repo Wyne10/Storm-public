@@ -23,7 +23,7 @@ data class PlayerEffect(
             this(uuid = uuid, effectInstanceKey = effectInstanceKey, remainingMillis = remainingMillis, timestamp = Date())
 
     companion object {
-        private const val UNIQUE_INDEX_NAME = "idx_player_effect"
+        private const val UNIQUE_INDEX_NAME = "player_effect_idx"
         const val EFFECT_INSTANCE_FIELD = "effect_instance_key"
     }
 }
