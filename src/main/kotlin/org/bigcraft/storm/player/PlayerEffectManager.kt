@@ -5,6 +5,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import me.wyne.wutils.common.terminable.Terminable
 import org.bigcraft.storm.Storm
+import org.bigcraft.storm.api.EffectSource
 import org.bigcraft.storm.api.StormEffectManager
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
@@ -18,7 +19,8 @@ import java.util.UUID
 @Singleton
 class PlayerEffectManager @Inject constructor(
     private val plugin: Storm,
-    private val effectStorage: PlayerEffectStorage
+    private val effectStorage: PlayerEffectStorage,
+    private val historyManager: EffectHistoryManager
 ) : StormEffectManager, Listener, Terminable {
 
     private val effectExpirationTable = HashBasedTable.create<UUID, String, Long>()
@@ -34,9 +36,10 @@ class PlayerEffectManager @Inject constructor(
         return System.currentTimeMillis() < expireAt
     }
 
-    override fun setEffect(player: OfflinePlayer?, effectInstanceKey: String, durationMillis: Long) {
+    override fun setEffect(player: OfflinePlayer?, effectInstanceKey: String, durationMillis: Long, source: EffectSource) {
         if (player == null) return
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis)
+        historyManager.add(player.uniqueId, effectInstanceKey, durationMillis, source.source)
         if (player.isOnline)
             effectExpirationTable.put(player.uniqueId, effectInstanceKey, System.currentTimeMillis() + durationMillis)
     }

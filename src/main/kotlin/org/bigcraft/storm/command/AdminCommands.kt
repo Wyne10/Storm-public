@@ -11,6 +11,7 @@ import me.wyne.wutils.common.kotlin.command.suggest
 import me.wyne.wutils.i18n.kotlin.placeholderComponent
 import me.wyne.wutils.i18n.kotlin.replace
 import org.bigcraft.infpoints.api.IPApi
+import org.bigcraft.storm.api.EffectSource
 import org.bigcraft.storm.effect.StormEffectManager
 import org.bigcraft.storm.player.PlayerEffectManager
 import org.bukkit.entity.Player
@@ -26,7 +27,7 @@ class ApplyCommand(effectManager: StormEffectManager, playerManager: PlayerEffec
             val target = args.getOfflinePlayer("target", sender)
             val duration = args.getRaw("duration") ?: "0"
             assertEffectInstanceKeyExists(effectManager, effectInstanceKey, sender)
-            playerManager.setEffect(target, effectInstanceKey, Durations.getMillis(duration))
+            playerManager.setEffect(target, effectInstanceKey, Durations.getMillis(duration), EffectSource.APPLY)
             sender.placeholderComponent("success-effect-apply", "key" replace effectInstanceKey).sendMessage(sender)
         })
 }
@@ -76,7 +77,7 @@ class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEf
                 return@CommandExecutor
             }
             if (point.subtract(target.uniqueId, price)) {
-                playerManager.setEffect(target, effectInstanceKey, Durations.getMillis(duration))
+                playerManager.setEffect(target, effectInstanceKey, Durations.getMillis(duration), EffectSource.PURCHASE)
                 target.placeholderComponent("success-effect-purchase",
                     "key" replace effectInstanceKey,
                     "price" replace price
