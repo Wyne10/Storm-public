@@ -43,7 +43,7 @@ class ClearCommand(effectManager: StormEffectManager, playerManager: PlayerEffec
                 effectManager.mapKeys.forEach {
                     playerManager.clearEffect(target, it)
                 }
-                sender.placeholderComponent("success-effect-clear", "key" replace "").sendMessage(sender)
+                sender.placeholderComponent("success-effects-clear").sendMessage(sender)
             } else {
                 assertEffectInstanceKeyExists(effectManager, effectInstanceKey, sender)
                 playerManager.clearEffect(target, effectInstanceKey)
@@ -52,8 +52,7 @@ class ClearCommand(effectManager: StormEffectManager, playerManager: PlayerEffec
         })
 }
 
-// TODO Override toggle
-class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEffectManager) : SubCommand("purchase") {
+class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEffectManager, allowPurchaseOverride: Boolean) : SubCommand("purchase") {
     override val command: CommandAPICommand = super.command
         .withPermission("effects.purchase")
         .withArguments(CommandUtils.onlinePlayer("target"))
@@ -63,7 +62,7 @@ class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEf
         .withArguments(DoubleArgument("price").suggest("<price>"))
         .executes(CommandExecutor { sender, args ->
             val effectInstanceKey = args.getRaw("key") ?: ""
-            val target = args.getByClass("target", Player::class.java)
+            val target = args.getByClass("target", Player::class.java)!!
             val duration = args.getRaw("duration") ?: "0"
             val currency = args.getRaw("currency")
             val point = IPApi.getInstance().getPoint(currency) ?: throw CommandAPIBukkit.failWithBaseComponents(
@@ -71,8 +70,22 @@ class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEf
             )
             val price = args.getByClass("price", Double::class.java)!!
             assertEffectInstanceKeyExists(effectManager, effectInstanceKey, sender)
-            if (point.subtract(target, price)) {
+            val isActive = playerManager.isAffected(target, effectInstanceKey)
+            if (isActive && !allowPurchaseOverride) {
+                target.placeholderComponent("error-effect-already-active", "key" replace effectInstanceKey).sendMessage(target)
+                return@CommandExecutor
+            }
+            if (point.subtract(target.uniqueId, price)) {
                 playerManager.setEffect(target, effectInstanceKey, Durations.getMillis(duration))
+                target.placeholderComponent("success-effect-purchase",
+                    "key" replace effectInstanceKey,
+                    "price" replace price
+                ).sendMessage(target)
+            } else {
+                target.placeholderComponent("error-insufficient-funds",
+                    "key" replace effectInstanceKey,
+                    "price" replace price
+                ).sendMessage(target)
             }
         })
 }

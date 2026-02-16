@@ -32,6 +32,9 @@ class StormEffectManager @Inject constructor(plugin: Storm) : AbstractManager<St
         plugin.bind(this)
     }
 
+    fun getEffectInstance(effectInstanceKey: String): StormEffectInstance? =
+        loadedMap[effectInstanceKey]
+
     override fun register(effect: Class<out StormEffect>, effectKey: String) {
         registeredEffects[effectKey] = effect
         Storm.logger.debug("Registered effect '{}'", effectKey)

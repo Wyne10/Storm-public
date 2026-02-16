@@ -6,8 +6,12 @@
 error-effect-not-found: "<red>Эффект '<key>' не существует!"
 error-player-not-found: "<red>Игрок '<name>' не существует!"
 error-currency-not-found: "<red>Валюта '<currency>' не существует!"
+error-insufficient-funds: "<red>Недостаточно средств!"
+error-effect-already-active: "<red>Эффект уже действует!"
 
 ## Success
 success-plugin-reload: "<green>Плагин перезагружен!"
-success-effect-apply: "<green>Эффект применен."
-success-effect-clear: "<green>Эффект очищен."
+success-effect-apply: "<green>Эффект '<name>' применен."
+success-effect-clear: "<green>Эффект '<name>' очищен."
+success-effect-purchase: "<green>Вы приобрели эффект '<name>'"
+success-effects-clear: "<green>Эффекты очищены."
