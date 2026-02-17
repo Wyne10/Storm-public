@@ -11,6 +11,7 @@ import org.bigcraft.storm.api.StormApi
 import org.bigcraft.storm.api.StormEffect
 import org.bigcraft.storm.api.StormEffectRegistry
 import org.bigcraft.storm.api.TickableStormEffect
+import org.bigcraft.storm.effect.impl.CropsEffect
 import org.bigcraft.storm.effect.impl.HunterEffect
 import org.bukkit.configuration.ConfigurationSection
 import java.io.File
@@ -62,6 +63,9 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
             super.load(config)
             loadFiles(effectDirectory)
             return
+        } else {
+            super.load(config)
+            loadFiles(effectDirectory)
         }
         eventRegistry.clear()
         effects.clear()
@@ -93,6 +97,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
     companion object {
         fun registerImplementations() {
             StormApi.getEffectRegistry().register(HunterEffect::class.java, "hunter")
+            StormApi.getEffectRegistry().register(CropsEffect::class.java, "crops")
         }
     }
 
