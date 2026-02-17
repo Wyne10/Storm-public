@@ -3,6 +3,7 @@ package org.bigcraft.storm.module
 import com.google.inject.AbstractModule
 import org.bigcraft.storm.Storm
 import org.bigcraft.storm.command.StormCommand
+import org.bigcraft.storm.placeholder.EffectPlaceholders
 
 //region Implementations
 
@@ -36,7 +37,8 @@ private class ConfigurableModule(
 
 val PlaceholderModule: AbstractModule = OptionalModule(
     className = "me.clip.placeholderapi.PlaceholderAPI",
-    exceptionMessage = "PlaceholderAPI not found, placeholders are not registered"
+    exceptionMessage = "PlaceholderAPI not found, placeholders are not registered",
+    EffectPlaceholders::class.java
 )
 
 val CommandModule: AbstractModule = OptionalModule(

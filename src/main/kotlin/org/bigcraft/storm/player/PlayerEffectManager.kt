@@ -36,6 +36,12 @@ class PlayerEffectManager @Inject constructor(
         return System.currentTimeMillis() < expireAt
     }
 
+    override fun getRemainingMillis(player: Player?, effectInstanceKey: String): Long {
+        if (player == null) return 0
+        val expireAt = effectExpirationTable.get(player.uniqueId, effectInstanceKey) ?: return 0
+        return (expireAt - System.currentTimeMillis()).coerceAtLeast(0)
+    }
+
     override fun setEffect(player: OfflinePlayer?, effectInstanceKey: String, durationMillis: Long, source: EffectSource) {
         if (player == null) return
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis)
