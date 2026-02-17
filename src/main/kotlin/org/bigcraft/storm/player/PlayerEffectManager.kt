@@ -7,6 +7,7 @@ import me.wyne.wutils.common.terminable.Terminable
 import org.bigcraft.storm.Storm
 import org.bigcraft.storm.api.EffectSource
 import org.bigcraft.storm.api.StormEffectManager
+import org.bigcraft.storm.api.event.StormEffectApplyEvent
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -44,6 +45,10 @@ class PlayerEffectManager @Inject constructor(
 
     override fun setEffect(player: OfflinePlayer?, effectInstanceKey: String, durationMillis: Long, source: EffectSource) {
         if (player == null) return
+        val effectInstance = org.bigcraft.storm.effect.StormEffectManager.instance.getEffectInstance(effectInstanceKey)
+            ?: throw IllegalArgumentException("Unknown effect: $effectInstanceKey")
+        if (!StormEffectApplyEvent(player, effectInstance.effectKey, effectInstance.configuration, source).callEvent())
+            return
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis)
         historyManager.add(player.uniqueId, effectInstanceKey, durationMillis, source.source)
         if (player.isOnline)
