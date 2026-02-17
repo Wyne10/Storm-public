@@ -90,3 +90,45 @@ class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEf
             }
         })
 }
+
+class PurchaseManyCommand(effectManager: StormEffectManager, playerManager: PlayerEffectManager, allowPurchaseOverride: Boolean) : SubCommand("purchase-many") {
+    override val command: CommandAPICommand = super.command
+        .withPermission("effects.purchase")
+        .withArguments(CommandUtils.onlinePlayer("target"))
+        .withArguments(durationArgument("duration"))
+        .withArguments(StringArgument("currency").suggest("<currency>"))
+        .withArguments(DoubleArgument("price").suggest("<price>"))
+        .withArguments(effectInstanceKeyManyArgument(effectManager, "key"))
+        .executes(CommandExecutor { sender, args ->
+            val effectInstanceKeys = args.get("key") as List<String>
+            val target = args.getByClass("target", Player::class.java)!!
+            val duration = args.getRaw("duration") ?: "0"
+            val currency = args.getRaw("currency")
+            val point = IPApi.getInstance().getPoint(currency) ?: throw CommandAPIBukkit.failWithBaseComponents(
+                *sender.placeholderComponent("error-currency-not-found", "currency" replace currency).bungee()
+            )
+            val price = args.getByClass("price", Double::class.java)!!
+            effectInstanceKeys.forEach {
+                assertEffectInstanceKeyExists(effectManager, it, sender)
+            }
+            val activeEffect = effectInstanceKeys.firstOrNull {
+                playerManager.isAffected(target, it)
+            }
+            if (activeEffect != null && !allowPurchaseOverride) {
+                target.placeholderComponent("error-effect-already-active", "key" replace activeEffect).sendMessage(target)
+                return@CommandExecutor
+            }
+            if (point.subtract(target.uniqueId, price)) {
+                effectInstanceKeys.forEach {
+                    playerManager.setEffect(target, it, Durations.getMillis(duration), EffectSource.PURCHASE)
+                }
+                target.placeholderComponent("success-effects-purchase",
+                    "price" replace price
+                ).sendMessage(target)
+            } else {
+                target.placeholderComponent("error-insufficient-funds",
+                    "price" replace price
+                ).sendMessage(target)
+            }
+        })
+}

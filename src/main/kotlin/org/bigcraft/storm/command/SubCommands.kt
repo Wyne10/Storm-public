@@ -1,10 +1,13 @@
 package org.bigcraft.storm.command
 
+import com.google.common.base.Supplier
 import dev.jorel.commandapi.CommandAPIBukkit
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.StringTooltip
 import dev.jorel.commandapi.arguments.Argument
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
+import dev.jorel.commandapi.arguments.ListArgument
+import dev.jorel.commandapi.arguments.ListArgumentBuilder
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandArguments
 import dev.jorel.commandapi.executors.CommandExecutor
@@ -35,6 +38,12 @@ class ReloadCommand(plugin: Storm) : SubCommand("reload") {
 fun effectInstanceKeyArgument(effectManager: StormEffectManager, nodeName: String): Argument<String> =
     StringArgument(nodeName)
         .replaceSuggestions(ArgumentSuggestions.stringCollection { effectManager.mapKeys })
+
+fun effectInstanceKeyManyArgument(effectManager: StormEffectManager, nodeName: String): ListArgument<String> =
+    ListArgumentBuilder<String>(nodeName)
+        .withList(Supplier { effectManager.mapKeys })
+        .withStringMapper()
+        .buildGreedy()
 
 fun assertEffectInstanceKeyExists(effectManager: StormEffectManager, effectInstanceKey: String, sender: CommandSender) {
     if (!effectManager.mapKeys.contains(effectInstanceKey))

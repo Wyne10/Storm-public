@@ -30,6 +30,7 @@ class StormCommand @Inject constructor(
             .withSubcommand(ApplyCommand(effectManager, playerManager)())
             .withSubcommand(ClearCommand(effectManager, playerManager)())
             .withSubcommand(PurchaseCommand(effectManager, playerManager, allowPurchaseOverride)())
+            .withSubcommand(PurchaseManyCommand(effectManager, playerManager, allowPurchaseOverride)())
             .register(plugin)
     }
 
