@@ -47,7 +47,7 @@ class PlayerEffectManager @Inject constructor(
         if (player == null) return
         val effectInstance = org.bigcraft.storm.effect.StormEffectManager.instance.getEffectInstance(effectInstanceKey)
             ?: throw IllegalArgumentException("Unknown effect: $effectInstanceKey")
-        if (!StormEffectApplyEvent(player, effectInstance.effectKey, effectInstance.configuration, source).callEvent())
+        if (!StormEffectApplyEvent(player, effectInstance.effectKey, effectInstance.config, source).callEvent())
             return
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis)
         historyManager.add(player.uniqueId, effectInstanceKey, durationMillis, source.source)
