@@ -11,8 +11,10 @@ import org.bigcraft.storm.api.StormApi
 import org.bigcraft.storm.api.StormEffect
 import org.bigcraft.storm.api.StormEffectRegistry
 import org.bigcraft.storm.api.TickableStormEffect
+import org.bigcraft.storm.api.event.StormEffectInstance
 import org.bigcraft.storm.effect.impl.CommandsEffect
 import org.bigcraft.storm.effect.impl.CropsEffect
+import org.bigcraft.storm.effect.impl.EmptyEffect
 import org.bigcraft.storm.effect.impl.HunterEffect
 import org.bukkit.configuration.ConfigurationSection
 import java.io.File
@@ -23,7 +25,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
     StormEffectRegistry, Terminable {
 
     override val sectionKey = "effect"
-    override val valueLoader = StormEffectInstance.Factory
+    override val valueLoader = StormEffectInstanceFactory
     private val effectDirectory = File(plugin.dataFolder, "effect")
 
     private val registeredEffects: MutableMap<String, Class<out StormEffect>> = mutableMapOf()
@@ -36,7 +38,13 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
         plugin.bind(this)
     }
 
-    fun getEffectInstance(effectInstanceKey: String): StormEffectInstance? =
+    override fun isRegistered(effectKey: String): Boolean =
+        registeredEffects.containsKey(effectKey)
+
+    override fun isRegistered(effect: Class<out StormEffect>): Boolean =
+        registeredEffects.containsValue(effect)
+
+    override fun getEffectInstance(effectInstanceKey: String): StormEffectInstance? =
         loadedMap[effectInstanceKey]
 
     override fun register(effect: Class<out StormEffect>, effectKey: String) {
@@ -48,7 +56,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
                 runCatching {
                     Storm.logger.debug("Loading effect instance '{}'", it.key)
                     val newEffect = effect
-                        .getConstructor(ConfigurationSection::class.java).newInstance(it.configuration)
+                        .getConstructor(ConfigurationSection::class.java).newInstance(it.config)
                     effects[it.key] = newEffect
                     if (newEffect is TickableStormEffect) {
                         ticker.registerEffect(effectKey, newEffect.periodTicks)
@@ -80,7 +88,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
                     Storm.logger.error("No effect with a key '{}' is registered", it.effectKey).also { return@forEach }
                 runCatching {
                     val newEffect = effect
-                        .getConstructor(ConfigurationSection::class.java).newInstance(it.configuration)
+                        .getConstructor(ConfigurationSection::class.java).newInstance(it.config)
                     effects[it.key] = newEffect
                     if (newEffect is TickableStormEffect) {
                         ticker.registerEffect(it.effectKey, newEffect.periodTicks)
@@ -101,6 +109,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
             private set
 
         fun registerImplementations() {
+            StormApi.getEffectRegistry().register(EmptyEffect::class.java, "empty")
             StormApi.getEffectRegistry().register(HunterEffect::class.java, "hunter")
             StormApi.getEffectRegistry().register(CropsEffect::class.java, "crops")
             StormApi.getEffectRegistry().register(CommandsEffect::class.java, "commands")
