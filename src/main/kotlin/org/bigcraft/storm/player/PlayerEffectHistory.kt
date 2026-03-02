@@ -12,7 +12,7 @@ data class PlayerEffectHistory(
     val id: Long = 0,
     @DatabaseField(index = true, canBeNull = false)
     val uuid: UUID = UUID.randomUUID(),
-    @DatabaseField(columnName = EFFECT_INSTANCE_FIELD, canBeNull = false)
+    @DatabaseField(columnName = PlayerEffect.EFFECT_INSTANCE_FIELD, canBeNull = false)
     val effectInstanceKey: String = "",
     @DatabaseField(columnName = "duration_ms", canBeNull = false)
     var durationMillis: Long = 0,
@@ -23,9 +23,4 @@ data class PlayerEffectHistory(
 ) {
     constructor(uuid: UUID, effectInstanceKey: String, durationMillis: Long, source: String) :
             this(uuid = uuid, effectInstanceKey = effectInstanceKey, durationMillis = durationMillis, source = source, timestamp = Date())
-
-    companion object {
-        private const val UNIQUE_INDEX_NAME = "idx_player_effect"
-        const val EFFECT_INSTANCE_FIELD = "effect_instance_key"
-    }
 }
