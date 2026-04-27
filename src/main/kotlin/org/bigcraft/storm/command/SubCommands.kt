@@ -57,6 +57,7 @@ fun durationArgument(nodeName: String) =
         StringTooltip.ofString("<duration>", "Like 30m, 1h, 1m30s, etc.")
     )
 
+// TODO Weird stuff
 fun CommandArguments.getOfflinePlayer(nodeName: String, sender: CommandSender): OfflinePlayer {
     val playerName = getRaw(nodeName) ?: ""
     val playerUuid = Bukkit.getPlayerUniqueId(playerName)

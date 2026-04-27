@@ -1,4 +1,4 @@
-package org.bigcraft.storm.api.event;
+package org.bigcraft.storm.api;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;

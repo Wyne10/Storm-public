@@ -3,11 +3,13 @@ package org.bigcraft.storm.player
 import com.google.common.collect.HashBasedTable
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import me.wyne.wutils.common.scheduler.Schedulers
 import me.wyne.wutils.common.terminable.Terminable
 import org.bigcraft.storm.Storm
 import org.bigcraft.storm.api.EffectSource
 import org.bigcraft.storm.api.StormEffectManager
 import org.bigcraft.storm.api.event.StormEffectApplyEvent
+import org.bigcraft.storm.api.event.StormEffectClearEvent
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
@@ -47,7 +49,7 @@ class PlayerEffectManager @Inject constructor(
         if (player == null) return
         val effectInstance = org.bigcraft.storm.effect.StormEffectManager.instance.getEffectInstance(effectInstanceKey)
             ?: throw IllegalArgumentException("Unknown effect: $effectInstanceKey")
-        if (!StormEffectApplyEvent(player, effectInstance.effectKey, effectInstance.config, source).callEvent())
+        if (!StormEffectApplyEvent(player, effectInstance, source).callEvent())
             return
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis)
         historyManager.add(player.uniqueId, effectInstanceKey, durationMillis, source.source)
@@ -59,6 +61,9 @@ class PlayerEffectManager @Inject constructor(
         if (player == null) return
         effectExpirationTable.remove(player.uniqueId, effectInstanceKey) ?: return
         effectStorage.clearEffect(player.uniqueId, effectInstanceKey)
+        val effectInstance = org.bigcraft.storm.effect.StormEffectManager.instance.getEffectInstance(effectInstanceKey)
+            ?: return
+        StormEffectClearEvent(player, effectInstance).callEvent()
     }
 
     @EventHandler(ignoreCancelled = true)

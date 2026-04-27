@@ -18,20 +18,28 @@ public abstract class StormEffect implements Listener {
         this.effectInstanceKey = config.getName();
     }
 
-    protected JavaPlugin getPlugin() {
+    protected final JavaPlugin getPlugin() {
         return StormApi.getPlugin();
     }
 
-    protected @NotNull ConfigurationSection getConfig() {
+    protected final @NotNull ConfigurationSection getConfig() {
         return config;
     }
 
-    protected Logger getLogger() {
+    protected  final @NotNull String getEffectInstanceKey() {
+        return effectInstanceKey;
+    }
+
+    protected final Logger getLogger() {
         return StormApi.getLogger();
     }
 
-    protected boolean isAffected(@Nullable Player player) {
+    protected final boolean isAffected(@Nullable Player player) {
         return StormApi.getEffectManager().isAffected(player, effectInstanceKey);
+    }
+
+    protected final long getRemainingMillis(@Nullable Player player) {
+        return StormApi.getEffectManager().getRemainingMillis(player, effectInstanceKey);
     }
 
 }
