@@ -43,7 +43,7 @@ tasks {
             relocate("com.google.inject", "org.bigcraft.storm.shadow.google.guice")
             relocate("com.google.common", "org.bigcraft.storm.shadow.google.common")
             relocate("net.kyori", "org.bigcraft.storm.shadow.net.kyori")
-            relocate("dev.vankka", "org.bigcraft.customitems.shadow.dev.vankka")
+            relocate("dev.vankka", "org.bigcraft.storm.shadow.dev.vankka")
             relocate("me.wyne.wutils", "org.bigcraft.storm.shadow.wutils")
         }
     }
