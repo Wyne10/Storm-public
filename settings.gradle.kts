@@ -16,7 +16,7 @@ rootProject.name = "Storm"
 
 dependencyResolutionManagement {
     repositories {
-        mavenLocal()
+        //mavenLocal()
         mavenCentral()
         maven {
             url = uri("https://jitpack.io/")

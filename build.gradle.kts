@@ -18,6 +18,9 @@ dependencies {
     compileOnly(libs.commandApi)
     compileOnly(libs.connectionSource)
     compileOnly(libs.infPoints)
+    compileOnly(libs.antiRelog) {
+        exclude(group = "org.codemc.worldguardwrapper")
+    }
 
     implementation(project(":api"))
     implementation(libs.guice)
@@ -85,7 +88,7 @@ bukkit {
     author = findProperty("author").toString()
     main = "org.bigcraft.storm.Storm"
     apiVersion = "1.16"
-    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints")
+    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints", "AntiRelog")
     permissions {
         register("effects.*") {
             children = listOf("effects.reload", "effects.apply", "effects.clear", "effects.purchase")
