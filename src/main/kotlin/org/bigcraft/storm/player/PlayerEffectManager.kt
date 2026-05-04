@@ -3,6 +3,9 @@ package org.bigcraft.storm.player
 import com.google.common.collect.HashBasedTable
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import me.wyne.wutils.common.loadable.Loadable
+import me.wyne.wutils.common.loadable.LoadableMeta
+import me.wyne.wutils.common.loadable.Loader
 import me.wyne.wutils.common.scheduler.Schedulers
 import me.wyne.wutils.common.terminable.Terminable
 import org.bigcraft.storm.Storm
@@ -10,8 +13,10 @@ import org.bigcraft.storm.api.EffectSource
 import org.bigcraft.storm.api.StormEffectManager
 import org.bigcraft.storm.api.event.StormEffectApplyEvent
 import org.bigcraft.storm.api.event.StormEffectClearEvent
+import org.bigcraft.storm.api.event.StormEffectJoinEvent
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -20,17 +25,28 @@ import org.bukkit.event.player.PlayerQuitEvent
 import java.util.UUID
 
 @Singleton
+@LoadableMeta(priority = 1)
 class PlayerEffectManager @Inject constructor(
-    private val plugin: Storm,
+    plugin: Storm,
     private val effectStorage: PlayerEffectStorage,
     private val historyManager: EffectHistoryManager
-) : StormEffectManager, Listener, Terminable {
+) : StormEffectManager, Listener, Terminable, Loadable {
 
     private val effectExpirationTable = HashBasedTable.create<UUID, String, Long>()
+    private val hardDuration = mutableSetOf<String>()
 
     init {
+        Loader.global.registerLoadable(this)
         Bukkit.getPluginManager().registerEvents(this, plugin)
         plugin.bind(this)
+    }
+
+    override fun load(config: ConfigurationSection) {
+        hardDuration.clear()
+        org.bigcraft.storm.effect.StormEffectManager.instance.mapKeys
+            .mapNotNull { org.bigcraft.storm.effect.StormEffectManager.instance.getEffectInstance(it) }
+            .filter { it.config.getBoolean("hard") }
+            .forEach { hardDuration.add(it.key) }
     }
 
     override fun isAffected(player: Player?, effectInstanceKey: String): Boolean {
@@ -59,10 +75,10 @@ class PlayerEffectManager @Inject constructor(
 
     override fun clearEffect(player: OfflinePlayer?, effectInstanceKey: String) {
         if (player == null) return
-        effectExpirationTable.remove(player.uniqueId, effectInstanceKey) ?: return
-        effectStorage.clearEffect(player.uniqueId, effectInstanceKey)
         val effectInstance = org.bigcraft.storm.effect.StormEffectManager.instance.getEffectInstance(effectInstanceKey)
             ?: return
+        effectExpirationTable.remove(player.uniqueId, effectInstanceKey)
+        effectStorage.clearEffect(player.uniqueId, effectInstanceKey)
         StormEffectClearEvent(player, effectInstance).callEvent()
     }
 
@@ -71,9 +87,14 @@ class PlayerEffectManager @Inject constructor(
         effectStorage.getEffects(event.player.uniqueId)
             .thenAcceptAsync({ playerEffects ->
                 playerEffects.forEach {
-                    effectExpirationTable.put(it.uuid, it.effectInstanceKey, System.currentTimeMillis() + it.remainingMillis)
+                    val expireAt = if (hardDuration.contains(it.effectInstanceKey))
+                        it.timestamp.time + it.remainingMillis
+                    else
+                        System.currentTimeMillis() + it.remainingMillis
+                    effectExpirationTable.put(it.uuid, it.effectInstanceKey, expireAt)
+                    StormEffectJoinEvent(it.uuid, it.effectInstanceKey, expireAt).callEvent()
                 }
-            }, Bukkit.getScheduler().getMainThreadExecutor(plugin))
+            }, Schedulers.sync())
     }
 
     @EventHandler(ignoreCancelled = true)
