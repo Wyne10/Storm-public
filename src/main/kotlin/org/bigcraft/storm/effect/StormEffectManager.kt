@@ -11,11 +11,12 @@ import org.bigcraft.storm.api.StormApi
 import org.bigcraft.storm.api.StormEffect
 import org.bigcraft.storm.api.StormEffectRegistry
 import org.bigcraft.storm.api.TickableStormEffect
-import org.bigcraft.storm.api.event.StormEffectInstance
+import org.bigcraft.storm.api.StormEffectInstance
 import org.bigcraft.storm.effect.impl.CommandsEffect
 import org.bigcraft.storm.effect.impl.CropsEffect
 import org.bigcraft.storm.effect.impl.EmptyEffect
 import org.bigcraft.storm.effect.impl.HunterEffect
+import org.bigcraft.storm.effect.impl.PotionEffect
 import org.bukkit.configuration.ConfigurationSection
 import java.io.File
 
@@ -113,6 +114,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
             StormApi.getEffectRegistry().register(HunterEffect::class.java, "hunter")
             StormApi.getEffectRegistry().register(CropsEffect::class.java, "crops")
             StormApi.getEffectRegistry().register(CommandsEffect::class.java, "commands")
+            StormApi.getEffectRegistry().register(PotionEffect::class.java, "potion")
         }
     }
 

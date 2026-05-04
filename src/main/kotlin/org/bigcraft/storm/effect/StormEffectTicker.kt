@@ -7,7 +7,7 @@ import me.wyne.wutils.common.scheduler.Task
 import me.wyne.wutils.common.terminable.Terminable
 import org.bigcraft.storm.Storm
 import org.bigcraft.storm.api.TickableStormEffect
-import org.bigcraft.storm.api.event.StormEffectInstance
+import org.bigcraft.storm.api.StormEffectInstance
 import org.bigcraft.storm.player.PlayerEffectManager
 import org.bukkit.Bukkit
 

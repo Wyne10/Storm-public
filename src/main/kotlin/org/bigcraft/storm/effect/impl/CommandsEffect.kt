@@ -13,7 +13,7 @@ class CommandsEffect(config: ConfigurationSection) : StormEffect(config) {
 
     @EventHandler(ignoreCancelled = true)
     private fun onEffectApply(event: StormEffectApplyEvent) {
-        if (config != event.config) return
+        if (effectInstanceKey != event.effectInstance.key) return
         commands
             .map { event.player.placeholderString(it).get() }
             .forEach { Bukkit.dispatchCommand(Bukkit.getConsoleSender(), it) }

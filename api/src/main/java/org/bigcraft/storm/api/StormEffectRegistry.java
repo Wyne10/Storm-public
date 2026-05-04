@@ -1,6 +1,5 @@
 package org.bigcraft.storm.api;
 
-import org.bigcraft.storm.api.event.StormEffectInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

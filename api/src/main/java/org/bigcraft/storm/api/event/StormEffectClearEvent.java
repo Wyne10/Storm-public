@@ -1,27 +1,21 @@
 package org.bigcraft.storm.api.event;
 
-import org.bigcraft.storm.api.EffectSource;
 import org.bigcraft.storm.api.StormEffectInstance;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class StormEffectApplyEvent extends Event implements Cancellable {
+public class StormEffectClearEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private final @NotNull OfflinePlayer player;
     private final @NotNull StormEffectInstance effectInstance;
-    private final @NotNull EffectSource source;
 
-    private boolean isCancelled = false;
-
-    public StormEffectApplyEvent(@NotNull OfflinePlayer who, @NotNull StormEffectInstance effectInstance, @NotNull EffectSource source) {
+    public StormEffectClearEvent(@NotNull OfflinePlayer who, @NotNull StormEffectInstance effectInstance) {
         this.player = who;
         this.effectInstance = effectInstance;
-        this.source = source;
     }
 
     public @NotNull OfflinePlayer getPlayer() {
@@ -30,20 +24,6 @@ public class StormEffectApplyEvent extends Event implements Cancellable {
 
     public @NotNull StormEffectInstance getEffectInstance() {
         return effectInstance;
-    }
-
-    public @NotNull EffectSource getSource() {
-        return source;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return this.isCancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.isCancelled = cancelled;
     }
 
     public static HandlerList getHandlerList() {

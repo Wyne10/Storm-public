@@ -1,7 +1,7 @@
 package org.bigcraft.storm.effect
 
 import me.wyne.wutils.config.configurables.attribute.GenericFactory
-import org.bigcraft.storm.api.event.StormEffectInstance
+import org.bigcraft.storm.api.StormEffectInstance
 import org.bukkit.configuration.ConfigurationSection
 
 object StormEffectInstanceFactory : GenericFactory<StormEffectInstance> {

@@ -12,6 +12,7 @@ import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandArguments
 import dev.jorel.commandapi.executors.CommandExecutor
 import me.wyne.wutils.common.kotlin.command.tooltip
+import me.wyne.wutils.common.kotlin.player.exists
 import me.wyne.wutils.i18n.kotlin.placeholderComponent
 import me.wyne.wutils.i18n.kotlin.replace
 import org.bigcraft.storm.Storm
@@ -64,9 +65,9 @@ fun CommandArguments.getOfflinePlayer(nodeName: String, sender: CommandSender): 
             *sender.placeholderComponent("error-player-not-found", "name" replace playerName).bungee()
         )
     val player = Bukkit.getOfflinePlayer(playerUuid)
-    if (!player.hasPlayedBefore())
+    if (!player.exists)
         throw CommandAPIBukkit.failWithBaseComponents(
             *sender.placeholderComponent("error-player-not-found", "name" replace playerName).bungee()
         )
-    return Bukkit.getOfflinePlayer(playerUuid)
+    return player
 }

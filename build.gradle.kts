@@ -2,7 +2,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import org.codehaus.plexus.util.Os
 
 plugins {
-    kotlin("jvm") version "2.3.10"
+    kotlin("jvm") version "2.3.21"
     alias(libs.plugins.shadow)
     alias(libs.plugins.runPaperFork)
     alias(libs.plugins.pluginYml)
@@ -18,9 +18,13 @@ dependencies {
     compileOnly(libs.commandApi)
     compileOnly(libs.connectionSource)
     compileOnly(libs.infPoints)
+    compileOnly(libs.antiRelog) {
+        exclude(group = "org.codemc.worldguardwrapper")
+    }
 
     implementation(project(":api"))
     implementation(libs.guice)
+    implementation(libs.enhancedLegacy)
     implementation(libs.adventureMini)
     implementation(libs.adventureBukkit)
     implementation(libs.adventurePlain)
@@ -42,16 +46,17 @@ tasks {
             relocate("com.google.inject", "org.bigcraft.storm.shadow.google.guice")
             relocate("com.google.common", "org.bigcraft.storm.shadow.google.common")
             relocate("net.kyori", "org.bigcraft.storm.shadow.net.kyori")
+            relocate("dev.vankka", "org.bigcraft.storm.shadow.dev.vankka")
             relocate("me.wyne.wutils", "org.bigcraft.storm.shadow.wutils")
         }
     }
 
     runServer {
         val minecraftVersion: String = if (Os.isFamily(Os.FAMILY_WINDOWS) || isDebug) "1.19.4" else "1.16.5"
-        val viaVersion = "5.7.1"
+        val viaVersion = "5.9.0"
         val commandApiVersion = "9.4.2"
         downloadPlugins {
-            url("https://download.luckperms.net/1620/bukkit/loader/LuckPerms-Bukkit-5.5.32.jar")
+            url("https://download.luckperms.net/1631/bukkit/loader/LuckPerms-Bukkit-5.5.42.jar")
             github("PlaceholderAPI", "PlaceholderAPI", "2.12.2", "PlaceholderAPI-2.12.2.jar")
             github("dmulloy2", "ProtocolLib", "5.4.0", "ProtocolLib.jar")
             github("ViaVersion", "ViaVersion", viaVersion, "ViaVersion-$viaVersion.jar")
@@ -83,7 +88,7 @@ bukkit {
     author = findProperty("author").toString()
     main = "org.bigcraft.storm.Storm"
     apiVersion = "1.16"
-    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints")
+    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints", "AntiRelog")
     permissions {
         register("effects.*") {
             children = listOf("effects.reload", "effects.apply", "effects.clear", "effects.purchase")
