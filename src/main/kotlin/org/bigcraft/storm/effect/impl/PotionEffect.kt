@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityPotionEffectEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import ru.leymooo.antirelog.event.PvpStartedEvent
 import ru.leymooo.antirelog.event.PvpStoppedEvent
@@ -85,9 +86,11 @@ class PotionEffect(config: ConfigurationSection) : StormEffect(config) {
         Bukkit.getScheduler().runTask(Storm.instance, Runnable {
             effects
                 .map { (effect, amplifier) ->
-                    effect.createEffect(
+                    PotionEffect(
+                        effect,
                         Ticks.ofMillis(getRemainingMillis(player)).toInt(),
-                        amplifier
+                        amplifier,
+                        true
                     )
                 }
                 .forEach { effect -> effect.apply(player) }
