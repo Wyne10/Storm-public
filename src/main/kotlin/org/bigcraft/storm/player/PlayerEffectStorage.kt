@@ -106,8 +106,11 @@ class SqlPlayerEffectStorage @Inject constructor(
 
     override fun close() {
         executor.shutdown()
-        if (!executor.awaitTermination(60, TimeUnit.SECONDS))
+        if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
             executor.shutdownNow()
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS))
+                Storm.logger.error("Effect storage executor didn't terminate")
+        }
     }
 
 }

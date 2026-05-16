@@ -55,8 +55,11 @@ class SqlEffectHistoryManager @Inject constructor(
 
     override fun close() {
         executor.shutdown()
-        if (!executor.awaitTermination(60, TimeUnit.SECONDS))
+        if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
             executor.shutdownNow()
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS))
+                Storm.logger.error("Effect history executor didn't terminate")
+        }
     }
 
 }
