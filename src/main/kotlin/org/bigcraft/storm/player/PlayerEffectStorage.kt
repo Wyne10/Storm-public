@@ -30,7 +30,7 @@ class SqlPlayerEffectStorage @Inject constructor(
 
     private var effectDao: Dao<PlayerEffect, Long>? = null
 
-    private var executor = Executors.newFixedThreadPool(4)
+    private var executor = Executors.newSingleThreadExecutor()
 
     init {
         Loader.global.registerLoadable(this)
