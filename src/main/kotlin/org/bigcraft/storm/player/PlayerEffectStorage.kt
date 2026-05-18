@@ -39,7 +39,7 @@ class SqlPlayerEffectStorage @Inject constructor(
 
     override fun load(config: ConfigurationSection) {
         close()
-        executor = Executors.newFixedThreadPool(4)
+        executor = Executors.newSingleThreadExecutor()
         effectDao = null
         if (connectionProvider.isActive) {
             effectDao = DaoManager.createDao(connectionProvider.connectionPool.source, PlayerEffect::class.java)
