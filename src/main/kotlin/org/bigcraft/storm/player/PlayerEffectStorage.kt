@@ -58,12 +58,8 @@ class SqlPlayerEffectStorage @Inject constructor(
                 ?.and()
                 ?.eq(PlayerEffect.EFFECT_INSTANCE_FIELD, effectInstanceKey)
                 ?.queryForFirst()
-            if (playerEffect == null) {
-                effectDao?.create(PlayerEffect(player, effectInstanceKey, durationMillis))
-            } else {
-                playerEffect.remainingMillis = durationMillis
-                effectDao?.update(playerEffect)
-            }
+            playerEffect?.let { effectDao?.delete(it) }
+            effectDao?.create(PlayerEffect(player, effectInstanceKey, durationMillis))
         }
     }
 

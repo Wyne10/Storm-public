@@ -87,10 +87,15 @@ class PlayerEffectManager @Inject constructor(
         effectStorage.getEffects(event.player.uniqueId)
             .thenAcceptAsync({ playerEffects ->
                 playerEffects.forEach {
-                    val expireAt = if (hardDuration.contains(it.effectInstanceKey))
+                    val hard = hardDuration.contains(it.effectInstanceKey)
+                    val expireAt = if (hard)
                         it.timestamp.time + it.remainingMillis
                     else
                         System.currentTimeMillis() + it.remainingMillis
+                    if (hard && expireAt <= System.currentTimeMillis()) {
+                        effectStorage.clearEffect(it.uuid, it.effectInstanceKey)
+                        return@forEach
+                    }
                     effectExpirationTable.put(it.uuid, it.effectInstanceKey, expireAt)
                     StormEffectJoinEvent(it.uuid, it.effectInstanceKey, expireAt).callEvent()
                 }
@@ -101,15 +106,17 @@ class PlayerEffectManager @Inject constructor(
     private fun onQuit(event: PlayerQuitEvent) {
         val playerEffects = effectExpirationTable.row(event.player.uniqueId)
         playerEffects.forEach { (effectInstanceKey, expireAtMillis) ->
+            if (hardDuration.contains(effectInstanceKey)) return@forEach
             effectStorage.updateRemaining(event.player.uniqueId, effectInstanceKey, expireAtMillis - System.currentTimeMillis())
         }
         playerEffects.clear()
     }
 
     override fun close() {
+        val time = System.currentTimeMillis()
         effectExpirationTable.cellSet()
             .forEach {
-                val time = System.currentTimeMillis()
+                if (hardDuration.contains(it.columnKey)) return@forEach
                 effectStorage.updateRemaining(it.rowKey, it.columnKey, it.value - time)
             }
     }
