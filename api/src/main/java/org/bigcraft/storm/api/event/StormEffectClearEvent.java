@@ -6,6 +6,12 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Fired after an effect instance has been cleared from a player via
+ * {@link org.bigcraft.storm.api.StormEffectManager#clearEffect}. Unlike
+ * {@link StormEffectApplyEvent}, this is not cancellable: by the time it fires the player's
+ * effect state has already been removed.
+ */
 public class StormEffectClearEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -18,10 +24,16 @@ public class StormEffectClearEvent extends Event {
         this.effectInstance = effectInstance;
     }
 
+    /**
+     * Returns the player the effect was cleared from.
+     */
     public @NotNull OfflinePlayer getPlayer() {
         return player;
     }
 
+    /**
+     * Returns the effect instance that was cleared.
+     */
     public @NotNull StormEffectInstance getEffectInstance() {
         return effectInstance;
     }

@@ -8,6 +8,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Fired before an effect instance is applied to (or extended for) a player, i.e. before
+ * {@link org.bigcraft.storm.api.StormEffectManager#setEffect} takes effect. Cancelling this event
+ * aborts the call: no duration, history, or state changes happen.
+ */
 public class StormEffectApplyEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -24,14 +29,23 @@ public class StormEffectApplyEvent extends Event implements Cancellable {
         this.source = source;
     }
 
+    /**
+     * Returns the player the effect is being applied to.
+     */
     public @NotNull OfflinePlayer getPlayer() {
         return player;
     }
 
+    /**
+     * Returns the effect instance being applied.
+     */
     public @NotNull StormEffectInstance getEffectInstance() {
         return effectInstance;
     }
 
+    /**
+     * Returns where this application originated from.
+     */
     public @NotNull EffectSource getSource() {
         return source;
     }

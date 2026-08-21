@@ -62,9 +62,8 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
                     if (newEffect is TickableStormEffect) {
                         ticker.registerEffect(effectKey, newEffect.periodTicks)
                         ticker.registerEffectInstance(it, newEffect)
-                    } else {
-                        eventRegistry.register(newEffect)
                     }
+                    eventRegistry.register(newEffect)
                 }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance '{}'", it.key, t) }
             }
     }
@@ -94,9 +93,8 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
                     if (newEffect is TickableStormEffect) {
                         ticker.registerEffect(it.effectKey, newEffect.periodTicks)
                         ticker.registerEffectInstance(it, newEffect)
-                    } else {
-                        eventRegistry.register(newEffect)
                     }
+                    eventRegistry.register(newEffect)
                 }.onFailure { t -> Storm.logger.error("An exception occurred trying to load effect instance '{}'", it.key, t) }
             }
     }
