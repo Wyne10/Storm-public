@@ -5,12 +5,12 @@ import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.DoubleArgument
 import dev.jorel.commandapi.arguments.StringArgument
 import dev.jorel.commandapi.executors.CommandExecutor
+import me.wyne.infpoints.api.IPApi
 import me.wyne.wutils.common.command.CommandUtils
 import me.wyne.wutils.common.duration.Durations
 import me.wyne.wutils.common.kotlin.command.suggest
 import me.wyne.wutils.i18n.kotlin.placeholderComponent
 import me.wyne.wutils.i18n.kotlin.replace
-import org.bigcraft.infpoints.api.IPApi
 import org.bigcraft.storm.api.EffectSource
 import org.bigcraft.storm.effect.StormEffectManager
 import org.bigcraft.storm.player.PlayerEffectManager
@@ -65,7 +65,7 @@ class PurchaseCommand(effectManager: StormEffectManager, playerManager: PlayerEf
             val effectInstanceKey = args.getRaw("key") ?: ""
             val target = args.getByClass("target", Player::class.java)!!
             val duration = args.getRaw("duration") ?: "0"
-            val currency = args.getRaw("currency")
+            val currency = args.getRaw("currency") ?: ""
             val point = IPApi.getInstance().getPoint(currency) ?: throw CommandAPIBukkit.failWithBaseComponents(
                 *sender.placeholderComponent("error-currency-not-found", "currency" replace currency).bungee()
             )
@@ -103,7 +103,7 @@ class PurchaseManyCommand(effectManager: StormEffectManager, playerManager: Play
             val effectInstanceKeys = args.get("key") as List<String>
             val target = args.getByClass("target", Player::class.java)!!
             val duration = args.getRaw("duration") ?: "0"
-            val currency = args.getRaw("currency")
+            val currency = args.getRaw("currency") ?: ""
             val point = IPApi.getInstance().getPoint(currency) ?: throw CommandAPIBukkit.failWithBaseComponents(
                 *sender.placeholderComponent("error-currency-not-found", "currency" replace currency).bungee()
             )

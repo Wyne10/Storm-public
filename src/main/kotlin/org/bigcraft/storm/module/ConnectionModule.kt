@@ -1,7 +1,7 @@
 package org.bigcraft.storm.module
 
 import com.google.inject.AbstractModule
-import org.bigcraft.connection.api.ConnectionProvider
+import me.wyne.connection.api.ConnectionProvider
 import org.bigcraft.storm.Storm
 import org.bigcraft.storm.player.EffectHistoryManager
 import org.bigcraft.storm.player.EmptyEffectHistoryManager

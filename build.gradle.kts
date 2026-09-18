@@ -2,7 +2,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import org.codehaus.plexus.util.Os
 
 plugins {
-    kotlin("jvm") version "2.3.21"
+    kotlin("jvm") version "2.4.20"
     alias(libs.plugins.shadow)
     alias(libs.plugins.runPaperFork)
     alias(libs.plugins.pluginYml)
@@ -53,10 +53,10 @@ tasks {
 
     runServer {
         val minecraftVersion: String = if (Os.isFamily(Os.FAMILY_WINDOWS) || isDebug) "1.19.4" else "1.16.5"
-        val viaVersion = "5.10.0"
+        val viaVersion = "5.11.0"
         val commandApiVersion = "9.4.2"
         downloadPlugins {
-            url("https://download.luckperms.net/1645/bukkit/loader/LuckPerms-Bukkit-5.5.57.jar")
+            url("https://download.luckperms.net/1671/bukkit/loader/LuckPerms-Bukkit-5.5.84.jar")
             github("PlaceholderAPI", "PlaceholderAPI", "2.12.2", "PlaceholderAPI-2.12.2.jar")
             github("dmulloy2", "ProtocolLib", "5.4.0", "ProtocolLib.jar")
             github("ViaVersion", "ViaVersion", viaVersion, "ViaVersion-$viaVersion.jar")

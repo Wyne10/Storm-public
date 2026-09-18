@@ -5,9 +5,9 @@ import com.google.inject.Singleton
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
 import com.j256.ormlite.table.TableUtils
+import me.wyne.connection.api.ConnectionProvider
 import me.wyne.wutils.common.loadable.Loadable
 import me.wyne.wutils.common.loadable.Loader
-import org.bigcraft.connection.api.ConnectionProvider
 import org.bigcraft.storm.Storm
 import org.bukkit.configuration.ConfigurationSection
 import java.util.UUID
