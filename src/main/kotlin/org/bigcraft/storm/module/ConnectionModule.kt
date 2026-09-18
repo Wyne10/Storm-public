@@ -14,7 +14,7 @@ import org.bukkit.Bukkit
 object ConnectionModule : AbstractModule() {
     override fun configure() {
         try {
-            Class.forName("org.bigcraft.connection.api.ConnectionProvider")
+            Class.forName("me.wyne.connection.api.ConnectionProvider")
             bind(ConnectionProvider::class.java)
                 .toInstance(Bukkit.getServicesManager().getRegistration(ConnectionProvider::class.java)!!.provider)
             bind(PlayerEffectStorage::class.java).to(SqlPlayerEffectStorage::class.java)
