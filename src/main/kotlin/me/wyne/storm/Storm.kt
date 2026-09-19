@@ -1,0 +1,36 @@
+package me.wyne.storm
+
+import com.google.inject.Injector
+import me.wyne.wutils.common.plugin.CompositeJavaPlugin
+import org.bukkit.configuration.MemoryConfiguration
+import org.slf4j.Logger
+
+class Storm : CompositeJavaPlugin<Storm>() {
+
+    lateinit var injector: Injector
+        internal set
+
+    override fun init() {
+        instance = this
+        addSteps(
+            LoadDefaultConfig,
+            InitializeLogger,
+            InitializeI18n,
+            InitializeInjector,
+            InitializeConfig,
+            InitializeLoader,
+            Load,
+            RegisterEffects,
+            Reload
+        )
+    }
+
+    companion object {
+        lateinit var instance: Storm
+            private set
+        lateinit var logger: Logger
+            internal set
+        val EMPTY_CONFIGURATION = MemoryConfiguration()
+    }
+
+}

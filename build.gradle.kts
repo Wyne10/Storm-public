@@ -4,7 +4,7 @@ import org.codehaus.plexus.util.Os
 plugins {
     kotlin("jvm") version "2.4.20"
     alias(libs.plugins.shadow)
-    alias(libs.plugins.runPaperFork)
+    alias(libs.plugins.runPaper)
     alias(libs.plugins.pluginYml)
 }
 
@@ -18,9 +18,6 @@ dependencies {
     compileOnly(libs.commandApi)
     compileOnly(libs.connectionSource)
     compileOnly(libs.infPoints)
-    compileOnly(libs.antiRelog) {
-        exclude(group = "org.codemc.worldguardwrapper")
-    }
 
     implementation(project(":api"))
     implementation(libs.guice)
@@ -43,11 +40,11 @@ tasks {
         archiveClassifier.set("")
         minimize()
         if (!isDebug) {
-            relocate("com.google.inject", "org.bigcraft.storm.shadow.google.guice")
-            relocate("com.google.common", "org.bigcraft.storm.shadow.google.common")
-            relocate("net.kyori", "org.bigcraft.storm.shadow.net.kyori")
-            relocate("dev.vankka", "org.bigcraft.storm.shadow.dev.vankka")
-            relocate("me.wyne.wutils", "org.bigcraft.storm.shadow.wutils")
+            relocate("com.google.inject", "me.wyne.storm.shadow.google.guice")
+            relocate("com.google.common", "me.wyne.storm.shadow.google.common")
+            relocate("net.kyori", "me.wyne.storm.shadow.net.kyori")
+            relocate("dev.vankka", "me.wyne.storm.shadow.dev.vankka")
+            relocate("me.wyne.wutils", "me.wyne.storm.shadow.wutils")
         }
     }
 
@@ -64,7 +61,6 @@ tasks {
             github("CommandAPI", "CommandAPI", commandApiVersion, "CommandAPI-$commandApiVersion.jar")
         }
         runDirectory(layout.projectDirectory.dir("run-$minecraftVersion").asFile)
-        serverTemplates(layout.projectDirectory.dir("run-template").asFile)
         minecraftVersion(minecraftVersion)
     }
 
@@ -86,9 +82,9 @@ bukkit {
     version = getVersion().toString()
     website = findProperty("website").toString()
     author = findProperty("author").toString()
-    main = "org.bigcraft.storm.Storm"
+    main = "me.wyne.storm.Storm"
     apiVersion = "1.16"
-    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints", "AntiRelog")
+    softDepend = listOf("PlaceholderAPI", "CommandAPI", "ConnectionSource", "InfPoints")
     permissions {
         register("effects.*") {
             children = listOf("effects.reload", "effects.apply", "effects.clear", "effects.purchase")

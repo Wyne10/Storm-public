@@ -1,5 +1,5 @@
 regenerate: true
-lang: 'ru.yml'
+lang: 'en.yml'
 usePlayerLanguage: true
 # LEGACY/ENHANCED_LEGACY/MINI_MESSAGE
 serializer: MINI_MESSAGE
@@ -7,7 +7,12 @@ serializer: MINI_MESSAGE
 logLevel: INFO
 
 effect:
-  hunter:
-    name: "Бустер опыта"
-    effect: hunter
-    multiplier: 1.25
+  vip-day:
+    name: "<light_purple>VIP Day"
+    effect: empty
+    hard: true
+  welcome-gift:
+    name: "<gold>Welcome Gift"
+    effect: commands
+    commands:
+      - 'give %player_name% minecraft:cake 1'

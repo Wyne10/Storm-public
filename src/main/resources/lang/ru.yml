@@ -1,6 +1,6 @@
 ### Format
 
-format-effect-active: "%dtf_duration_{effect_<key>_remaining}_hms-ru%"
+format-effect-active: "%dtf_duration_{effect_<key>_remaining}_HH:mm:ss%"
 format-effect-inactive: "- - -"
 
 ### Messages

@@ -1,6 +1,10 @@
 plugins {
     id("java-library")
-    id("maven-publish")
+    id("com.vanniktech.maven.publish") version "0.35.0"
+}
+
+dependencies {
+    compileOnly(libs.paperApi)
 }
 
 java {
@@ -8,42 +12,41 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(16))
 }
 
-dependencies {
-    compileOnly(libs.paperApi)
+tasks.named("publish") {
+    dependsOn("publishToMavenLocal")
 }
 
-publishing {
-    repositories {
-        val repoUrl = findProperty("myMavenRepoWriteUrl").toString()
-        if (repoUrl.isNotEmpty()) {
-            maven {
-                url = uri(repoUrl)
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 
-                credentials {
-                    username = findProperty("myMavenRepoWriteUsername").toString()
-                    password = findProperty("myMavenRepoWritePassword").toString()
-                }
+    coordinates(findProperty("centralGroup").toString(), "storm-api", version.toString())
+
+    pom {
+        name.set("Storm API")
+        description.set("API for the Storm Bukkit/Paper plugin, which grants players timed, configurable effects and lets other plugins register their own effect types, apply and clear effects, and react to effect lifecycle events.")
+        inceptionYear.set("2026")
+        url.set("https://github.com/Wyne10/Storm")
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
+                distribution.set("https://opensource.org/licenses/MIT")
             }
         }
-        maven {
-            url = uri("https://git.bigteam.pw/api/v4/projects/10/packages/maven")
-            credentials(HttpHeaderCredentials::class) {
-                name = "Deploy-Token"
-                value = findProperty("gitLabPrivateToken") as String?
-            }
-            authentication {
-                create("header", HttpHeaderAuthentication::class)
+        developers {
+            developer {
+                id.set("Wyne10")
+                name.set("Wyne")
+                email.set("izmodenov1997@gmail.com")
+                organization.set("BigTeam")
+                organizationUrl.set("https://github.com/NeverMined-Entertainment")
             }
         }
-    }
-
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = findProperty("group").toString()
-            artifactId = "Storm-api"
-            version = findProperty("version").toString()
-
-            from(components["java"])
+        scm {
+            url.set("https://github.com/Wyne10/Storm")
+            connection.set("scm:git:git://github.com/Wyne10/Storm.git")
+            developerConnection.set("scm:git:ssh://git@github.com/Wyne10/Storm.git")
         }
     }
 }
