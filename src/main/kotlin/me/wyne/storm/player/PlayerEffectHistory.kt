@@ -6,6 +6,11 @@ import com.j256.ormlite.table.DatabaseTable
 import java.util.Date
 import java.util.UUID
 
+enum class EffectHistoryAction {
+    APPLY,
+    CLEAR
+}
+
 @DatabaseTable(tableName = "storm_effects_history")
 data class PlayerEffectHistory(
     @DatabaseField(generatedId = true)
@@ -14,13 +19,19 @@ data class PlayerEffectHistory(
     val uuid: UUID = UUID.randomUUID(),
     @DatabaseField(columnName = PlayerEffect.EFFECT_INSTANCE_FIELD, canBeNull = false)
     val effectInstanceKey: String = "",
+    @DatabaseField(canBeNull = false, width = 16)
+    val action: String = EffectHistoryAction.APPLY.name,
     @DatabaseField(columnName = "duration_ms", canBeNull = false)
-    var durationMillis: Long = 0,
-    @DatabaseField(canBeNull = false)
-    val source: String = "",
+    val durationMillis: Long = 0,
+    // Null for a clear, which has no originating EffectSource
+    @DatabaseField(width = 64)
+    val source: String? = null,
+    @DatabaseField(width = 64)
+    val server: String? = null,
     @DatabaseField(dataType = DataType.DATE, canBeNull = false)
     val timestamp: Date = Date()
 ) {
-    constructor(uuid: UUID, effectInstanceKey: String, durationMillis: Long, source: String) :
-            this(uuid = uuid, effectInstanceKey = effectInstanceKey, durationMillis = durationMillis, source = source, timestamp = Date())
+    constructor(uuid: UUID, effectInstanceKey: String, action: EffectHistoryAction, durationMillis: Long, source: String?, server: String?) :
+            this(uuid = uuid, effectInstanceKey = effectInstanceKey, action = action.name, durationMillis = durationMillis,
+                source = source, server = server, timestamp = Date())
 }

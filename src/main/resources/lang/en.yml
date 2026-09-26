@@ -16,8 +16,8 @@ error-effect-already-active: "<red>That effect is already active!"
 
 ## Success
 success-plugin-reload: "<green>Plugin reloaded!"
-success-effect-apply: "<green>Effect '%effect_<key>_name%' applied."
-success-effect-clear: "<green>Effect '%effect_<key>_name%' cleared."
-success-effect-purchase: "<green>You bought the effect '%effect_<key>_name%'."
+success-effect-apply: "<green>Effect '%effect_<key>_name%<reset><green>' applied."
+success-effect-clear: "<green>Effect '%effect_<key>_name%<reset><green>' cleared."
+success-effect-purchase: "<green>You bought the effect '%effect_<key>_name%<reset><green>'."
 success-effects-purchase: "<green>Effects applied."
 success-effects-clear: "<green>Effects cleared."

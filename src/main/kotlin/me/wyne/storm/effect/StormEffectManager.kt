@@ -14,6 +14,7 @@ import me.wyne.storm.api.TickableStormEffect
 import me.wyne.storm.api.StormEffectInstance
 import me.wyne.storm.effect.impl.CommandsEffect
 import me.wyne.storm.effect.impl.EmptyEffect
+import me.wyne.storm.effect.impl.PotionEffect
 import org.bukkit.configuration.ConfigurationSection
 import java.io.File
 
@@ -107,6 +108,7 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
         fun registerImplementations() {
             StormApi.getEffectRegistry().register(EmptyEffect::class.java, "empty")
             StormApi.getEffectRegistry().register(CommandsEffect::class.java, "commands")
+            StormApi.getEffectRegistry().register(PotionEffect::class.java, "potion")
         }
     }
 

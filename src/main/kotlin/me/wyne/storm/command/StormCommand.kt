@@ -25,7 +25,8 @@ class StormCommand @Inject constructor(
     }
 
     private fun registerCommand() {
-        CommandAPICommand("effects")
+        CommandAPICommand("storm")
+            .withAliases("effects")
             .withSubcommand(ReloadCommand(plugin)())
             .withSubcommand(ApplyCommand(effectManager, playerManager)())
             .withSubcommand(ClearCommand(effectManager, playerManager)())

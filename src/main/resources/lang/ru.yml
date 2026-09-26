@@ -16,8 +16,8 @@ error-effect-already-active: "<red>Эффект уже действует!"
 
 ## Success
 success-plugin-reload: "<green>Плагин перезагружен!"
-success-effect-apply: "<green>Эффект '%effect_<key>_name%' применен."
-success-effect-clear: "<green>Эффект '%effect_<key>_name%' очищен."
-success-effect-purchase: "<green>Вы приобрели эффект '%effect_<key>_name%'"
+success-effect-apply: "<green>Эффект '%effect_<key>_name%<reset><green>' применен."
+success-effect-clear: "<green>Эффект '%effect_<key>_name%<reset><green>' очищен."
+success-effect-purchase: "<green>Вы приобрели эффект '%effect_<key>_name%<reset><green>'"
 success-effects-purchase: "<green>Эффекты применены."
 success-effects-clear: "<green>Эффекты очищены."

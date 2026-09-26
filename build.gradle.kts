@@ -59,6 +59,7 @@ tasks {
             github("ViaVersion", "ViaVersion", viaVersion, "ViaVersion-$viaVersion.jar")
             github("ViaVersion", "ViaBackwards", viaVersion, "ViaBackwards-$viaVersion.jar")
             github("CommandAPI", "CommandAPI", commandApiVersion, "CommandAPI-$commandApiVersion.jar")
+            github("Wyne10", "ConnectionSource-public", "2.0.0", "ConnectionSource-2.0.0.jar")
         }
         runDirectory(layout.projectDirectory.dir("run-$minecraftVersion").asFile)
         minecraftVersion(minecraftVersion)
