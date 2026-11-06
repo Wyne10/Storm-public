@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.dao.DaoManager
+import com.j256.ormlite.misc.TransactionManager
 import com.j256.ormlite.support.ConnectionSource
 import com.j256.ormlite.table.TableUtils
 import me.wyne.connection.api.ConnectionProvider
@@ -62,7 +63,7 @@ class SqlEffectHistoryManager @Inject constructor(
     ): CompletableFuture<Void> {
         val entry = PlayerEffectHistory(player, effectInstanceKey, action, durationMillis, source, serverIdentity.name)
         return loggedWrite(executor, "record $action of effect '$effectInstanceKey' of $player in the history") {
-            dao(requireSource()).create(entry)
+            inTransaction { dao -> dao.create(entry) }
         }
     }
 
@@ -73,6 +74,12 @@ class SqlEffectHistoryManager @Inject constructor(
             if (!executor.awaitTermination(ABORT_SECONDS, TimeUnit.SECONDS))
                 Storm.logger.error("Effect history executor didn't terminate")
         }
+    }
+
+    private fun <T> inTransaction(action: (Dao<PlayerEffectHistory, Long>) -> T): T {
+        val source = requireSource()
+        val dao = dao(source)
+        return TransactionManager.callInTransaction(source) { action(dao) }
     }
 
     private fun requireSource(): ConnectionSource =
