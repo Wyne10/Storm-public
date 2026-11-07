@@ -46,6 +46,8 @@ The file name without `.yml` must match the section inside it; otherwise the eff
 
 Applying an effect a player already has starts it over with the new duration. It doesn't add to the time left.
 
+A soft timer is counted rather than stored as a countdown: Storm records how much of the duration a player has spent online, so the time left survives a crash and stays correct when several servers share one database. See [How a soft timer is counted](configuration.md#how-a-soft-timer-is-counted).
+
 {% hint style="info" %}
 Timers only survive the player leaving when [ConnectionSource](configuration.md#database) is installed. Without it, every effect ends when the player leaves, `hard` or not.
 {% endhint %}
