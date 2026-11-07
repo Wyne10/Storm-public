@@ -31,23 +31,23 @@ class ReloadCommand(plugin: Storm) : SubCommand("reload") {
         .withPermission("effects.reload")
         .executes(CommandExecutor { sender, _ ->
             plugin.reload()
-            sender.placeholderComponent("success-plugin-reload").sendMessage(sender)
+            sender.placeholderComponent("success-plugin-reload").sendMessagePlayer(sender)
             Storm.logger.info("Plugin reloaded")
         })
 }
 
 fun effectInstanceKeyArgument(effectManager: StormEffectManager, nodeName: String): Argument<String> =
     StringArgument(nodeName)
-        .replaceSuggestions(ArgumentSuggestions.stringCollection { effectManager.mapKeys })
+        .replaceSuggestions(ArgumentSuggestions.stringCollection { effectManager.map.keys })
 
 fun effectInstanceKeyManyArgument(effectManager: StormEffectManager, nodeName: String): ListArgument<String> =
     ListArgumentBuilder<String>(nodeName)
-        .withList(Supplier { effectManager.mapKeys })
+        .withList(Supplier { effectManager.map.keys })
         .withStringMapper()
         .buildGreedy()
 
 fun assertEffectInstanceKeyExists(effectManager: StormEffectManager, effectInstanceKey: String, sender: CommandSender) {
-    if (!effectManager.mapKeys.contains(effectInstanceKey))
+    if (!effectManager.map.keys.contains(effectInstanceKey))
         throw CommandAPIBukkit.failWithBaseComponents(
             *sender.placeholderComponent("error-effect-not-found", "key" replace effectInstanceKey).bungee()
         )

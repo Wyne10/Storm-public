@@ -8,16 +8,16 @@ format-effect-inactive: "- - -"
 ## Info
 
 ## Error
-error-effect-not-found: "<red>Effect '<key>' doesn't exist!"
-error-player-not-found: "<red>Player '<name>' doesn't exist!"
-error-currency-not-found: "<red>Currency '<currency>' doesn't exist!"
-error-insufficient-funds: "<red>Not enough funds!"
-error-effect-already-active: "<red>That effect is already active!"
+error-effect-not-found: "<red>▶ <white>Effect '<key>' doesn't exist!"
+error-player-not-found: "<red>▶ <white>Player '<name>' doesn't exist!"
+error-currency-not-found: "<red>▶ <white>Currency '<currency>' doesn't exist!"
+error-insufficient-funds: "<red>▶ <white>Not enough funds!"
+error-effect-already-active: "<red>▶ <white>That effect is already active!"
 
 ## Success
-success-plugin-reload: "<green>Plugin reloaded!"
-success-effect-apply: "<green>Effect '%effect_<key>_name%<reset><green>' applied."
-success-effect-clear: "<green>Effect '%effect_<key>_name%<reset><green>' cleared."
-success-effect-purchase: "<green>You bought the effect '%effect_<key>_name%<reset><green>'."
-success-effects-purchase: "<green>Effects applied."
-success-effects-clear: "<green>Effects cleared."
+success-plugin-reload: "<green>▶ <white>Plugin reloaded!"
+success-effect-apply: "<green>▶ <white>Effect '%effect_<key>_name%<reset><white>' applied."
+success-effect-clear: "<green>▶ <white>Effect '%effect_<key>_name%<reset><white>' cleared."
+success-effect-purchase: "<green>▶ <white>You bought the effect '%effect_<key>_name%<reset><white>'."
+success-effects-purchase: "<green>▶ <white>Effects applied."
+success-effects-clear: "<green>▶ <white>Effects cleared."

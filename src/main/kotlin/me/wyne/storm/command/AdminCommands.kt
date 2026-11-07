@@ -43,7 +43,7 @@ class ClearCommand(effectManager: StormEffectManager, playerManager: PlayerEffec
             val effectInstanceKey = args.getRaw("key") ?: ""
             val target = args.getOfflinePlayer("target", sender)
             if (effectInstanceKey.isBlank()) {
-                effectManager.mapKeys.forEach {
+                effectManager.map.keys.forEach {
                     playerManager.clearEffect(target, it)
                 }
                 sender.placeholderComponent("success-effects-clear").sendMessage(sender)

@@ -33,9 +33,10 @@ class StormEffectTicker @Inject constructor(plugin: Storm, private val playerMan
     }
 
     private fun tick(effectKey: String) {
-        if (!effectTasks.containsKey(effectKey)) return
+        // An effect type keeps its task across reloads even when no instance of it is left
+        val instances = effects[effectKey] ?: return
         for (player in Bukkit.getOnlinePlayers()) {
-            val affected = effects[effectKey]!!
+            val affected = instances
                 .filter { playerManager.isAffected(player, it.first.key) }
                 .map { it.second }
             affected.forEach { it.tick(player) }

@@ -65,7 +65,7 @@ With [ConnectionSource](https://wyne.gitbook.io/wyne-docs/connectionsource/) ins
 | `storm_effects`         | One row per player per effect they have: the time left in `remaining_ms`, and when it was applied in `timestamp`. A row is deleted when the effect is cleared or has run out. |
 | `storm_effects_history` | One row every time an effect is applied: the player, the effect, `duration_ms`, `source` (`apply` or `purchase`), and `timestamp`. Storm never deletes these.                 |
 
-Without ConnectionSource, Storm logs a warning at startup and keeps effects in memory only: they work, but end when the player leaves or the server stops, and no history is written.
+Without ConnectionSource, Storm logs a warning at startup and keeps effects in memory only: they last across rejoins, but end when the server stops, aren't shared with other servers, and no history is written.
 
 ## Files the plugin writes
 

@@ -44,18 +44,21 @@ object InitializeLogger : PluginStep<Storm> {
 
 @Step(priority = 3, scope = StepScope.ENABLE)
 object InitializeI18n : PluginStep<Storm> {
+    private var audiences: BukkitAudiences? = null
     override fun run(plugin: Storm) {
+        audiences?.close()
+        audiences = BukkitAudiences.create(plugin)
         I18n.global = PluginI18nBuilder(plugin)
             .setLogger(logger)
-            .setComponentAudience(BukkitComponentAudiences(BukkitAudiences.create(plugin)))
+            .setComponentAudience(BukkitComponentAudiences(audiences!!))
             .setComponentInterpreter(
                 ComponentInterpreters.valueOf(
                     plugin.config.getString("serializer", "MINI_MESSAGE")!!
                 ).get(EmptyValidator())
             )
             .setUsePlayerLanguage(plugin.config.getBoolean("usePlayerLanguage", true))
-            .loadLanguage("lang/ru.yml")
             .loadLanguage("lang/en.yml")
+            .loadLanguage("lang/ru.yml")
             .build()
     }
 }
@@ -83,7 +86,7 @@ object InitializeInjector : PluginStep<Storm> {
 object InitializeConfig : CompositeStep<Storm>(ReloadConfig) {
     override fun before(plugin: Storm) {
         Config.global.apply {
-            logger = logger
+            logger = Storm.logger
             setConfigGenerator(plugin, "config.yml")
             generateConfig()
         }

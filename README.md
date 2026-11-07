@@ -33,7 +33,7 @@ Everything else is optional. Each plugin switches on a part of Storm:
 
 | Plugin                                                                  | What it enables                                                                                                     |
 | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [ConnectionSource](https://wyne.gitbook.io/wyne-docs/connectionsource/) | Storing effects and their history in a database. Without it, effects live in memory and end when the player leaves. |
+| [ConnectionSource](https://wyne.gitbook.io/wyne-docs/connectionsource/) | Storing effects and their history in a database. Without it, effects live in memory and end when the server stops. |
 | [CommandAPI](https://docs.commandapi.dev/)                              | The `/effects` command.                                                                                             |
 | [InfPoints](https://wyne.gitbook.io/wyne-docs/infpoints/)               | `/effects purchase` and `/effects purchase-many`.                                                                   |
 | [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)      | The `%effect_…%` placeholders, and PlaceholderAPI placeholders in messages and in `commands` effects.               |

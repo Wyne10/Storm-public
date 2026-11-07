@@ -28,8 +28,7 @@ import java.util.concurrent.ConcurrentHashMap
 @LoadableMeta(priority = 1)
 class PlayerEffectManager @Inject constructor(
     plugin: Storm,
-    private val effectStorage: PlayerEffectStorage,
-    private val historyManager: EffectHistoryManager
+    private val effectStorage: PlayerEffectStorage
 ) : StormEffectManager, Listener, Terminable, Loadable {
 
     private val effectExpiration = ConcurrentHashMap<UUID, ConcurrentHashMap<String, ActiveEffect>>()
@@ -42,8 +41,7 @@ class PlayerEffectManager @Inject constructor(
     }
 
     override fun load(config: ConfigurationSection) {
-        val hard = me.wyne.storm.effect.StormEffectManager.instance.mapKeys
-            .mapNotNull { me.wyne.storm.effect.StormEffectManager.instance.getEffectInstance(it) }
+        val hard = me.wyne.storm.effect.StormEffectManager.instance.map.values
             .filter { it.config.getBoolean("hard") }
             .map { it.key }
         hardDuration.retainAll(hard.toSet())
@@ -76,7 +74,7 @@ class PlayerEffectManager @Inject constructor(
         // A hard effect counts down whether the player is online or not, so it never opens a session
         val sessionStart = if (player.isOnline && !hardDuration.contains(effectInstanceKey)) now else null
         effectStorage.setEffect(player.uniqueId, effectInstanceKey, durationMillis, sessionStart)
-        historyManager.record(player.uniqueId, effectInstanceKey, EffectHistoryAction.APPLY, durationMillis, source.source)
+        effectStorage.record(player.uniqueId, effectInstanceKey, EffectHistoryAction.APPLY, durationMillis, source.source)
         if (player.isOnline)
             put(player.uniqueId, effectInstanceKey, now + durationMillis, sessionStart)
         return true
@@ -91,7 +89,7 @@ class PlayerEffectManager @Inject constructor(
             ?: 0
         effectExpiration[player.uniqueId]?.remove(effectInstanceKey)
         effectStorage.clearEffect(player.uniqueId, effectInstanceKey)
-        historyManager.record(player.uniqueId, effectInstanceKey, EffectHistoryAction.CLEAR, remaining, null)
+        effectStorage.record(player.uniqueId, effectInstanceKey, EffectHistoryAction.CLEAR, remaining, null)
         StormEffectClearEvent(player, effectInstance).callEvent()
     }
 
@@ -105,7 +103,7 @@ class PlayerEffectManager @Inject constructor(
                     // Anchored on the session the database opened, so the time charged on quit is exactly
                     // the time that elapsed in memory
                     val expireAt = if (hard)
-                        it.timestamp.time + it.totalMillis
+                        it.appliedAt + it.totalMillis
                     else
                         sessionStart + it.remainingMillis
                     if (expireAt <= System.currentTimeMillis()) {

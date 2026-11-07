@@ -1,15 +1,11 @@
-package me.wyne.storm.player
+package me.wyne.storm.entity
 
 import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
+import me.wyne.storm.player.EffectHistoryAction
 import java.util.Date
 import java.util.UUID
-
-enum class EffectHistoryAction {
-    APPLY,
-    CLEAR
-}
 
 @DatabaseTable(tableName = "storm_effects_history")
 data class PlayerEffectHistory(

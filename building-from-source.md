@@ -26,7 +26,7 @@ If you already cloned without `--recurse-submodules`, run `git submodule update 
 ./gradlew shadowJar
 ```
 
-The shaded plugin jar lands in `build/libs/Storm-<version>.jar`, ready to drop into a server's `plugins/` folder. The build strips unused classes and relocates Guice, Guava, Adventure, EnhancedLegacyText and WUtils under `me.wyne.storm.shadow`, so the plugin can't collide with another plugin bundling the same libraries.
+The shaded plugin jar lands in `build/libs/Storm-<version>.jar`, ready to drop into a server's `plugins/` folder. The build strips unused classes and relocates Guice, Guava, Adventure, EnhancedLegacyText, WUtils and the Kotlin standard library under `me.wyne.storm.shadow`, so the plugin can't collide with another plugin bundling the same libraries.
 
 | Command                            | What it does                                                                          |
 | ---------------------------------- | ------------------------------------------------------------------------------------- |
@@ -42,9 +42,9 @@ The project version lives in `gradle.properties` and names both the jar and the 
 ./gradlew runServer
 ```
 
-This builds the shaded jar, downloads Paper 1.16.5 along with CommandAPI, PlaceholderAPI, LuckPerms, ProtocolLib, ViaVersion, and ViaBackwards, then starts a server in `run-1.16.5/` with the plugin installed. Add `-Pdebug=true` to run on 1.19.4 in `run-1.19.4/` instead, with relocation off.
+This builds the shaded jar, downloads Paper 1.16.5 along with CommandAPI, PlaceholderAPI, ProtocolLib, ViaVersion, ViaBackwards, ConnectionSource and InfPoints, then starts a server in `run-1.16.5/` with the plugin installed. Add `-Pdebug=true` to run on 1.19.4 in `run-1.19.4/` instead, with relocation off.
 
-ConnectionSource and InfPoints aren't downloaded. Put their jars in the server's `plugins/` folder yourself to test storage or purchases.
+ConnectionSource still needs a database to connect to: fill in its config in `run-<version>/plugins/ConnectionSource/` to test storage.
 
 The server's copy of the config is `run-<version>/plugins/Storm/config.yml`. Add effects to it and run [`/effects reload`](commands-and-permissions.md) to try them without restarting.
 

@@ -8,16 +8,16 @@ format-effect-inactive: "- - -"
 ## Info
 
 ## Error
-error-effect-not-found: "<red>Эффект '<key>' не существует!"
-error-player-not-found: "<red>Игрок '<name>' не существует!"
-error-currency-not-found: "<red>Валюта '<currency>' не существует!"
-error-insufficient-funds: "<red>Недостаточно средств!"
-error-effect-already-active: "<red>Эффект уже действует!"
+error-effect-not-found: "<red>▶ <white>Эффект '<key>' не существует!"
+error-player-not-found: "<red>▶ <white>Игрок '<name>' не существует!"
+error-currency-not-found: "<red>▶ <white>Валюта '<currency>' не существует!"
+error-insufficient-funds: "<red>▶ <white>Недостаточно средств!"
+error-effect-already-active: "<red>▶ <white>Эффект уже действует!"
 
 ## Success
-success-plugin-reload: "<green>Плагин перезагружен!"
-success-effect-apply: "<green>Эффект '%effect_<key>_name%<reset><green>' применен."
-success-effect-clear: "<green>Эффект '%effect_<key>_name%<reset><green>' очищен."
-success-effect-purchase: "<green>Вы приобрели эффект '%effect_<key>_name%<reset><green>'"
-success-effects-purchase: "<green>Эффекты применены."
-success-effects-clear: "<green>Эффекты очищены."
+success-plugin-reload: "<green>▶ <white>Плагин перезагружен!"
+success-effect-apply: "<green>▶ <white>Эффект '%effect_<key>_name%<reset><white>' применен."
+success-effect-clear: "<green>▶ <white>Эффект '%effect_<key>_name%<reset><white>' очищен."
+success-effect-purchase: "<green>▶ <white>Вы приобрели эффект '%effect_<key>_name%<reset><white>'."
+success-effects-purchase: "<green>▶ <white>Эффекты применены."
+success-effects-clear: "<green>▶ <white>Эффекты очищены."

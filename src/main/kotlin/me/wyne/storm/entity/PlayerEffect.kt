@@ -1,8 +1,9 @@
-package me.wyne.storm.player
+package me.wyne.storm.entity
 
 import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
+import me.wyne.storm.player.StoredEffect
 import java.util.Date
 import java.util.UUID
 
@@ -28,6 +29,9 @@ data class PlayerEffect(
 ) {
     val remainingMillis: Long
         get() = (totalMillis - consumedMillis).coerceAtLeast(0)
+
+    fun toStoredEffect(): StoredEffect =
+        StoredEffect(uuid, effectInstanceKey, totalMillis, remainingMillis, timestamp.time)
 
     constructor(uuid: UUID, effectInstanceKey: String, totalMillis: Long, sessionStart: Long?, sessionOwner: String?) :
             this(uuid = uuid, effectInstanceKey = effectInstanceKey, totalMillis = totalMillis,

@@ -5,7 +5,7 @@ import com.google.inject.Singleton
 import me.wyne.wutils.common.event.EventRegistry
 import me.wyne.wutils.common.loadable.LoadableMeta
 import me.wyne.wutils.common.terminable.Terminable
-import me.wyne.storm.AbstractManager
+import me.wyne.storm.LoadableProvider
 import me.wyne.storm.Storm
 import me.wyne.storm.api.StormApi
 import me.wyne.storm.api.StormEffect
@@ -16,16 +16,11 @@ import me.wyne.storm.effect.impl.CommandsEffect
 import me.wyne.storm.effect.impl.EmptyEffect
 import me.wyne.storm.effect.impl.PotionEffect
 import org.bukkit.configuration.ConfigurationSection
-import java.io.File
 
 @Singleton
 @LoadableMeta(priority = 0)
-class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: StormEffectTicker) : AbstractManager<StormEffectInstance>(),
-    StormEffectRegistry, Terminable {
-
-    override val sectionKey = "effect"
-    override val valueLoader = StormEffectInstanceFactory
-    private val effectDirectory = File(plugin.dataFolder, "effect")
+class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: StormEffectTicker) :
+    LoadableProvider<StormEffectInstance>("effect", StormEffectInstanceFactory), StormEffectRegistry, Terminable {
 
     private val registeredEffects: MutableMap<String, Class<out StormEffect>> = mutableMapOf()
     private val effects: MutableMap<String, StormEffect> = mutableMapOf()
@@ -67,14 +62,10 @@ class StormEffectManager @Inject constructor(plugin: Storm, private val ticker: 
     }
 
     override fun load(config: ConfigurationSection) {
-        if (loadedMap.isEmpty()) {
-            super.load(config)
-            loadFiles(effectDirectory)
-            return
-        } else {
-            super.load(config)
-            loadFiles(effectDirectory)
-        }
+        super.load(config)
+        loadFiles(directory)
+        // On the first load no effect types are registered yet; register() builds their instances
+        if (registeredEffects.isEmpty()) return
         eventRegistry.clear()
         effects.clear()
         ticker.clear()
