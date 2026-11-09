@@ -10,12 +10,12 @@ import me.wyne.storm.placeholder.EffectPlaceholders
 private class OptionalModule(
     private val className: String,
     private val exceptionMessage: String = "$className not found, module ignored",
-    private vararg val modules: Class<out Any>
+    private val modules: () -> List<Class<out Any>> = { emptyList() }
 ) : AbstractModule() {
     override fun configure() {
         try {
             Class.forName(className)
-            modules.forEach { bind(it) }
+            modules().forEach { bind(it) }
         } catch (_: ClassNotFoundException) {
             Storm.logger.warn(exceptionMessage)
         }
@@ -24,12 +24,12 @@ private class OptionalModule(
 
 private class ConfigurableModule(
     private val configurationPath: String,
-    private vararg val modules: Class<out Any>
+    private val modules: () -> List<Class<out Any>>
 ) : AbstractModule() {
     override fun configure() {
         val isActive = Storm.instance.config.getBoolean(configurationPath, false)
         if (isActive)
-            modules.forEach { bind(it) }
+            modules().forEach { bind(it) }
     }
 }
 
@@ -37,12 +37,10 @@ private class ConfigurableModule(
 
 val PlaceholderModule: AbstractModule = OptionalModule(
     className = "me.clip.placeholderapi.PlaceholderAPI",
-    exceptionMessage = "PlaceholderAPI not found, placeholders are not registered",
-    EffectPlaceholders::class.java
-)
+    exceptionMessage = "PlaceholderAPI not found, placeholders are not registered"
+) { listOf(EffectPlaceholders::class.java) }
 
 val CommandModule: AbstractModule = OptionalModule(
     className = "dev.jorel.commandapi.CommandAPI",
-    exceptionMessage = "CommandAPI not found, commands are not registered",
-    StormCommand::class.java
-)
+    exceptionMessage = "CommandAPI not found, commands are not registered"
+) { listOf(StormCommand::class.java) }
